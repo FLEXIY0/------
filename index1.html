@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фильмы и Сериалы</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            position: relative;
+        }
+
+        .tile {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            background: #d3d3d3;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .tile:hover {
+            border-color: #4a90e2;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .container:has(.tile:hover) .tile:not(:hover) {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .submenu {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .tile:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .submenu-left {
+            right: calc(100% + 20px);
+        }
+
+        .submenu-right {
+            left: calc(100% + 20px);
+        }
+
+        .submenu a {    
+            display: block;
+            padding: 12px 24px;
+            background: #d3d3d3;
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .submenu a:hover {
+            background: #c0c0c0;
+            transform: translateX(5px);
+        }
+
+        .submenu-left a:hover {
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .submenu-left,
+            .submenu-right {
+                position: static;
+                transform: none;
+                margin-top: 15px;
+            }
+
+            .tile:hover .submenu {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Плитка Сериалы -->
+        <div class="tile">
+            Сериалы
+            <div class="submenu submenu-right">
+                <a href="index2.html">Просмотренные</a>
+                <a href="index2.html">Не просмотренные</a>
+            </div>
+        </div>
+
+        <!-- Плитка Фильмы -->
+        <div class="tile">
+            Фильмы
+            <div class="submenu submenu-left">
+                <a href="index2.html">Просмотренные</a>
+                <a href="index2.html">Не просмотренные</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
