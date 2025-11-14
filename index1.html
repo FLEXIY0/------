@@ -72,7 +72,24 @@
             z-index: 10;
         }
 
-        .tile:hover .submenu {
+        .submenu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+        }
+
+        .submenu-left::before {
+            left: 100%;
+        }
+
+        .submenu-right::before {
+            right: 100%;
+        }
+
+        .tile:hover .submenu,
+        .submenu:hover {
             opacity: 1;
             visibility: visible;
         }
@@ -109,6 +126,58 @@
             transform: translateX(-8px);
         }
 
+        .add-button-container {
+            position: fixed;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 20;
+        }
+
+        .add-button-trigger {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            z-index: 15;
+        }
+
+        .add-button-trigger:hover ~ .add-button-container {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .add-button-container:hover {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .add-button {
+            width: 160px;
+            height: 80px;
+            background: #212121;
+            border-radius: 80px 80px 0 0;
+            border: 3px solid transparent;
+            border-bottom: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 20px;
+            font-size: 40px;
+            color: #848484;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            user-select: none;
+            font-weight: 300;
+        }
+
+        .add-button:hover {
+            border-color: #323232;
+            border-bottom: none;
+            box-shadow: 0 -4px 12px rgba(55, 55, 55, 0.3);
+            
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -124,10 +193,23 @@
             .tile:hover .submenu {
                 display: flex;
             }
+
+            .add-button {
+                width: 120px;
+                height: 45px;
+                border-radius: 60px 60px 0 0;
+                font-size: 30px;
+            }
+            
+            .add-button-trigger {
+                height: 100px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="add-button-trigger"></div>
+    
     <div class="container">
         <!-- Плитка Сериалы -->
         <div class="tile">
@@ -147,5 +229,16 @@
             </div>
         </div>
     </div>
+
+    <div class="add-button-container">
+        <div class="add-button" onclick="createNewFilm()">+</div>
+    </div>
+
+    <script>
+        function createNewFilm() {
+            // Перенаправление на страницу создания новой карточки
+            window.location.href = 'edit-film.html';
+        }
+    </script>
 </body>
 </html>

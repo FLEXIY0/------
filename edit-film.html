@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карточка фильма</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background: #141414;
+            color: #9E9E9E;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            background: #212121;
+            padding: 15px 20px;
+            border-radius: 12px;
+        }
+
+        .back-button {
+            width: 50px;
+            height: 50px;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 8px;
+            color: #9E9E9E;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #323232;
+        }
+
+        .title-display {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #9E9E9E;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .title-display[readonly] {
+            pointer-events: none;
+        }
+
+        .title-display:not([readonly]) {
+            background: rgba(62, 62, 62, 0.5);
+            cursor: text;
+        }
+
+        .title-display:focus {
+            outline: none;
+            background: #3e3e3e;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .poster-section {
+            background: #212121;
+            border-radius: 12px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poster-section.readonly {
+            cursor: default;
+        }
+
+        .poster-section:not(.readonly):hover {
+            background: #2a2a2a;
+        }
+
+        .upload-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #9E9E9E;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .upload-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        input[type="file"] {
+            position: absolute !important;
+            width: 0 !important;
+            height: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            z-index: -1 !important;
+            visibility: hidden !important;
+            display: none !important;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .preview-item {
+            aspect-ratio: 16/9;
+            background: #212121;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #9E9E9E;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-item.readonly {
+            cursor: default;
+        }
+
+        .preview-item:not(.readonly):hover {
+            background: #2a2a2a;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .preview-item .preview-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: #212121;
+            border-radius: 12px;
+        }
+
+        .stars-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            line-height: 1;
+            user-select: none;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+        }
+
+        .star::before,
+        .star::after {
+            content: '★';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .star::before {
+            color: #3e3e3e;
+            z-index: 1;
+        }
+
+        .star::after {
+            color: #FFD700;
+            z-index: 2;
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.3s ease, transform 0.2s ease;
+        }
+
+        .star.readonly {
+            cursor: default;
+        }
+
+        /* Полная звезда */
+        .star.full::after {
+            clip-path: inset(0 0 0 0);
+        }
+
+        /* Половина звезды */
+        .star.half::after {
+            clip-path: inset(0 50% 0 0);
+        }
+
+        /* Hover эффект */
+        .star.hover-preview::after {
+            opacity: 0.7;
+        }
+
+        .star.hover-preview.full::after {
+            clip-path: inset(0 0 0 0);
+        }
+
+        .star.hover-preview.half::after {
+            clip-path: inset(0 50% 0 0);
+        }
+
+        .star:not(.readonly):hover::before,
+        .star:not(.readonly):hover::after {
+            transform: scale(1.1);
+        }
+
+        .rating-display-wrapper {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 2px;
+            padding: 8px 12px;
+            background: #3e3e3e;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .rating-display {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.3s ease;
+        }
+
+        .rating-max {
+            font-size: 20px;
+            font-weight: 500;
+            color: #848484;
+        }
+
+        /* Цветовая шкала для рейтинга */
+        .rating-0 { color: #666; }
+        .rating-1 { color: #e53935; }
+        .rating-2 { color: #ef5350; }
+        .rating-3 { color: #ff6f00; }
+        .rating-4 { color: #ff8f00; }
+        .rating-5 { color: #ffa726; }
+        .rating-6 { color: #ffc107; }
+        .rating-7 { color: #cddc39; }
+        .rating-8 { color: #8bc34a; }
+        .rating-9 { color: #66bb6a; }
+        .rating-10 { color: #4caf50; }
+
+        .api-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-icon {
+            width: 45px;
+            height: 45px;
+            background: #000;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .api-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .description-section {
+            background: #212121;
+            padding: 15px;
+            border-radius: 12px;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .description-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9E9E9E;
+            margin-bottom: 10px;
+        }
+
+        .description-textarea {
+            flex: 1;
+            width: 100%;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            color: #9E9E9E;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: "Inter", sans-serif;
+            min-height: 180px;
+        }
+
+        .description-textarea:focus {
+            outline: none;
+            background: #323232;
+        }
+
+        .description-textarea[readonly] {
+            pointer-events: none;
+        }
+
+        .metadata-section {
+            background: #212121;
+            padding: 15px;
+            border-radius: 12px;
+            flex: 1;
+        }
+
+        .metadata-text {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #9E9E9E;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .metadata-item {
+            background: #3e3e3e;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #9E9E9E;
+        }
+
+        .metadata-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #9E9E9E;
+            font-size: 12px;
+            padding: 0;
+            margin-top: 5px;
+        }
+
+        .metadata-input:focus {
+            outline: none;
+        }
+
+        .metadata-input[readonly] {
+            pointer-events: none;
+        }
+
+        .review-section {
+            background: #212121;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #9E9E9E;
+        }
+
+        .edit-icon {
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .edit-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .edit-icon.active {
+            color: #4CAF50;
+        }
+
+        .review-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            color: #9E9E9E;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: "Inter", sans-serif;
+        }
+
+        .review-textarea:focus {
+            outline: none;
+            background: #323232;
+        }
+
+        .review-textarea[readonly] {
+            pointer-events: none;
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 15px;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 12px;
+            color: #9E9E9E;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .save-button.visible {
+            display: block;
+        }
+
+        .save-button:hover {
+            background: #323232;
+            box-shadow: 0 4px 12px rgba(55, 55, 55, 0.3);
+        }
+
+        .readonly-mode .upload-text {
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <input type="text" class="title-display" id="filmTitle" placeholder="название фильма" readonly>
+        </div>
+
+        <div class="main-content">
+            <!-- Левая колонка -->
+            <div class="left-column">
+                <!-- Постер 16:9 -->
+                <div class="poster-section readonly" id="posterSection" onclick="handlePosterClick()">
+                    <input type="file" id="bannerInput" accept="image/*" onchange="handleBannerUpload(event)">
+                    <div class="upload-text" id="bannerText">Главный постер</div>
+                    <img id="bannerPreview" class="upload-preview" style="display: none;">
+                </div>
+
+                <!-- 3 превью под постером -->
+                <div class="preview-grid">
+                    <div class="preview-item readonly" onclick="handlePreviewClick(0)">
+                        <input type="file" id="preview1Input" accept="image/*" onchange="handlePreviewUpload(event, 0)" style="display: none;">
+                        <span class="preview-text">Превью</span>
+                    </div>
+                    <div class="preview-item readonly" onclick="handlePreviewClick(1)">
+                        <input type="file" id="preview2Input" accept="image/*" onchange="handlePreviewUpload(event, 1)" style="display: none;">
+                        <span class="preview-text">Превью</span>
+                    </div>
+                    <div class="preview-item readonly" onclick="handlePreviewClick(2)">
+                        <input type="file" id="preview3Input" accept="image/*" onchange="handlePreviewUpload(event, 2)" style="display: none;">
+                        <span class="preview-text">Превью</span>
+                    </div>
+                </div>
+
+                <!-- Звёзды под превью -->
+                <div class="rating-row">
+                    <div class="stars-container" id="starsContainer">
+                        <span class="star readonly" data-value="1" title="1 / 2"></span>
+                        <span class="star readonly" data-value="2" title="3 / 4"></span>
+                        <span class="star readonly" data-value="3" title="5 / 6"></span>
+                        <span class="star readonly" data-value="4" title="7 / 8"></span>
+                        <span class="star readonly" data-value="5" title="9 / 10"></span>
+                    </div>
+                    <div class="rating-display-wrapper">
+                        <div class="rating-display" id="ratingDisplay">0</div>
+                        <div class="rating-max">/10</div>
+                    </div>
+                    <div class="api-icons">
+                        <div class="api-icon" style="background: #FF6600;" title="Kinopoisk">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <text x="50%" y="70%" text-anchor="middle" font-size="18" font-weight="bold">K</text>
+                            </svg>
+                        </div>
+                        <div class="api-icon" style="background: #F5C518;" title="IMDB">
+                            <svg width="24" height="24" viewBox="0 0 24 24">
+                                <rect width="24" height="24" fill="#F5C518"/>
+                                <text x="50%" y="70%" text-anchor="middle" font-size="10" font-weight="bold" fill="#000">IMDb</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая колонка -->
+            <div class="right-column">
+                <!-- Описание фильма -->
+                <div class="description-section">
+                    <div class="description-title">Описание фильма/сериала</div>
+                    <textarea class="description-textarea" id="filmDescription" placeholder="Напишите описание фильма..." readonly></textarea>
+                </div>
+
+                <!-- Метаданные -->
+                <div class="metadata-section">
+                    <div class="metadata-text">Основные метрики по фильму (можно написать самому, а можно будет подгружать через API)</div>
+                    <div class="metadata-grid">
+                        <div class="metadata-item">
+                            <div>год только год</div>
+                            <input type="text" class="metadata-input" id="year" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>страна</div>
+                            <input type="text" class="metadata-input" id="country" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>сценарист</div>
+                            <input type="text" class="metadata-input" id="director" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>актёрский состав</div>
+                            <input type="text" class="metadata-input" id="cast" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>основная категория</div>
+                            <input type="text" class="metadata-input" id="mainCategory" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>подкатегория</div>
+                            <input type="text" class="metadata-input" id="subCategory" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>под категория 2</div>
+                            <input type="text" class="metadata-input" id="subCategory2" placeholder="" readonly>
+                        </div>
+                        <div class="metadata-item">
+                            <div>под категория 3</div>
+                            <input type="text" class="metadata-input" id="subCategory3" placeholder="" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Личный отзыв -->
+        <div class="review-section">
+            <div class="section-header">
+                <span class="section-title">Личный отзыв</span>
+                <span class="edit-icon" id="editIcon" onclick="toggleEditMode()">✏️</span>
+            </div>
+            <textarea class="review-textarea" id="personalReview" placeholder="Напишите свой отзыв..." readonly></textarea>
+        </div>
+
+        <button class="save-button" id="saveButton" onclick="saveFilm()">Сохранить</button>
+    </div>
+
+    <script>
+        let currentFilmId = null;
+        let currentRating = 0; // 0-10 (цена деления 1)
+        let isEditMode = false;
+        const API_URL = 'http://localhost:3000/api';
+        let previewImages = [null, null, null];
+
+        // Получение ID из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        currentFilmId = urlParams.get('id');
+
+        // Загрузка данных при открытии
+        if (currentFilmId) {
+            loadFilmData(currentFilmId);
+        } else {
+            // Если новая карточка - сразу в режим редактирования
+            toggleEditMode();
+        }
+
+        async function loadFilmData(id) {
+            try {
+                const response = await fetch(`${API_URL}/films/${id}`);
+                const data = await response.json();
+                
+                document.getElementById('filmTitle').value = data.title || '';
+                document.getElementById('year').value = data.year || '';
+                document.getElementById('country').value = data.country || '';
+                document.getElementById('director').value = data.director || '';
+                document.getElementById('cast').value = data.cast || '';
+                document.getElementById('mainCategory').value = data.mainCategory || '';
+                document.getElementById('subCategory').value = data.subCategory || '';
+                document.getElementById('subCategory2').value = data.subCategory2 || '';
+                document.getElementById('subCategory3').value = data.subCategory3 || '';
+                document.getElementById('filmDescription').value = data.filmDescription || '';
+                document.getElementById('personalReview').value = data.personalReview || '';
+                
+                setRating(data.rating || 0);
+                
+                if (data.banner) {
+                    showBannerPreview(data.banner);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+            }
+        }
+
+        // Переключение режима редактирования
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const editIcon = document.getElementById('editIcon');
+            const saveButton = document.getElementById('saveButton');
+            
+            // Обновляем иконку
+            if (isEditMode) {
+                editIcon.classList.add('active');
+                saveButton.classList.add('visible');
+            } else {
+                editIcon.classList.remove('active');
+                saveButton.classList.remove('visible');
+            }
+            
+            // Все поля ввода
+            document.getElementById('filmTitle').readOnly = !isEditMode;
+            document.getElementById('year').readOnly = !isEditMode;
+            document.getElementById('country').readOnly = !isEditMode;
+            document.getElementById('director').readOnly = !isEditMode;
+            document.getElementById('cast').readOnly = !isEditMode;
+            document.getElementById('mainCategory').readOnly = !isEditMode;
+            document.getElementById('subCategory').readOnly = !isEditMode;
+            document.getElementById('subCategory2').readOnly = !isEditMode;
+            document.getElementById('subCategory3').readOnly = !isEditMode;
+            document.getElementById('filmDescription').readOnly = !isEditMode;
+            document.getElementById('personalReview').readOnly = !isEditMode;
+            
+            // Постер
+            const posterSection = document.getElementById('posterSection');
+            if (isEditMode) {
+                posterSection.classList.remove('readonly');
+            } else {
+                posterSection.classList.add('readonly');
+            }
+            
+            // Превью
+            document.querySelectorAll('.preview-item').forEach(item => {
+                if (isEditMode) {
+                    item.classList.remove('readonly');
+                } else {
+                    item.classList.add('readonly');
+                }
+            });
+            
+            // Звёзды
+            document.querySelectorAll('.star').forEach(star => {
+                if (isEditMode) {
+                    star.classList.remove('readonly');
+                } else {
+                    star.classList.add('readonly');
+                }
+            });
+        }
+
+        // Обработчики кликов для загрузки файлов (только в режиме редактирования)
+        function handlePosterClick() {
+            if (isEditMode) {
+                document.getElementById('bannerInput').click();
+            }
+        }
+
+        function handlePreviewClick(index) {
+            if (isEditMode) {
+                document.getElementById(`preview${index + 1}Input`).click();
+            }
+        }
+
+        // Звёзды рейтинга (10-бальная система: половина звезды = 1 балл)
+        document.querySelectorAll('.star').forEach((star, index) => {
+            // Клик на половину звезды
+            star.addEventListener('click', function(e) {
+                if (!isEditMode) return;
+                
+                const rect = star.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const isLeftHalf = x < rect.width / 2;
+                
+                const starNumber = index + 1;
+                let rating;
+                
+                if (isLeftHalf) {
+                    // Половина звезды = 1 балл
+                    rating = (starNumber * 2) - 1;
+                } else {
+                    // Полная звезда = 2 балла
+                    rating = starNumber * 2;
+                }
+                
+                setRating(rating);
+            });
+
+            // Hover эффект - показывает предпросмотр рейтинга
+            star.addEventListener('mousemove', function(e) {
+                if (!isEditMode) return;
+                
+                const rect = star.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const isLeftHalf = x < rect.width / 2;
+                
+                const starNumber = index + 1;
+                let previewRating;
+                
+                if (isLeftHalf) {
+                    previewRating = (starNumber * 2) - 1;
+                    star.title = `${previewRating}`;
+                } else {
+                    previewRating = starNumber * 2;
+                    star.title = `${previewRating}`;
+                }
+                
+                // Показать предпросмотр
+                showRatingPreview(previewRating);
+            });
+
+            // Убрать предпросмотр при уходе мыши
+            star.addEventListener('mouseleave', function() {
+                if (!isEditMode) return;
+                clearRatingPreview();
+            });
+        });
+
+        function showRatingPreview(previewRating) {
+            document.querySelectorAll('.star').forEach((star, index) => {
+                const starNumber = index + 1;
+                const fullStarValue = starNumber * 2;
+                const halfStarValue = fullStarValue - 1;
+                
+                // Убрать классы предпросмотра
+                star.classList.remove('hover-preview', 'full', 'half');
+                
+                // Добавить предпросмотр если не readonly
+                if (!star.classList.contains('readonly')) {
+                    if (previewRating >= fullStarValue) {
+                        // Полная звезда в предпросмотре
+                        star.classList.add('hover-preview', 'full');
+                    } else if (previewRating >= halfStarValue) {
+                        // Половина звезды в предпросмотре
+                        star.classList.add('hover-preview', 'half');
+                    }
+                }
+            });
+        }
+
+        function clearRatingPreview() {
+            document.querySelectorAll('.star').forEach((star, index) => {
+                // Убираем только hover-preview, оставляем установленный рейтинг
+                star.classList.remove('hover-preview');
+                
+                // Восстанавливаем текущий рейтинг
+                const starNumber = index + 1;
+                const fullStarValue = starNumber * 2;
+                const halfStarValue = fullStarValue - 1;
+                
+                star.classList.remove('full', 'half');
+                
+                if (currentRating >= fullStarValue) {
+                    star.classList.add('full');
+                } else if (currentRating >= halfStarValue) {
+                    star.classList.add('half');
+                }
+            });
+        }
+
+        function setRating(rating) {
+            currentRating = rating;
+            
+            // Обновить отображение
+            const ratingDisplay = document.getElementById('ratingDisplay');
+            ratingDisplay.textContent = rating;
+            
+            // Удалить все классы цветов
+            for (let i = 0; i <= 10; i++) {
+                ratingDisplay.classList.remove(`rating-${i}`);
+            }
+            
+            // Добавить класс соответствующего цвета
+            ratingDisplay.classList.add(`rating-${rating}`);
+            
+            document.querySelectorAll('.star').forEach((star, index) => {
+                const starNumber = index + 1;
+                const fullStarValue = starNumber * 2;      // 2, 4, 6, 8, 10
+                const halfStarValue = fullStarValue - 1;   // 1, 3, 5, 7, 9
+                
+                star.classList.remove('full', 'half', 'hover-preview');
+                
+                if (rating >= fullStarValue) {
+                    // Полная звезда
+                    star.classList.add('full');
+                } else if (rating >= halfStarValue) {
+                    // Половина звезды
+                    star.classList.add('half');
+                }
+            });
+        }
+
+        // Загрузка баннера
+        function handleBannerUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    showBannerPreview(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showBannerPreview(src) {
+            document.getElementById('bannerPreview').src = src;
+            document.getElementById('bannerPreview').style.display = 'block';
+            document.getElementById('bannerText').style.display = 'none';
+        }
+
+        // Загрузка превью
+        function handlePreviewUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImages[index] = e.target.result;
+                    showPreviewImage(index, e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showPreviewImage(index, src) {
+            const previewItems = document.querySelectorAll('.preview-item');
+            const item = previewItems[index];
+            
+            // Удалить старое изображение если есть
+            const oldImg = item.querySelector('img');
+            if (oldImg) oldImg.remove();
+            
+            // Добавить новое
+            const img = document.createElement('img');
+            img.src = src;
+            item.appendChild(img);
+            
+            // Скрыть текст
+            const text = item.querySelector('.preview-text');
+            if (text) text.style.display = 'none';
+        }
+
+        // Сохранение фильма
+        async function saveFilm() {
+            const filmData = {
+                title: document.getElementById('filmTitle').value,
+                rating: currentRating,
+                year: document.getElementById('year').value,
+                country: document.getElementById('country').value,
+                director: document.getElementById('director').value,
+                cast: document.getElementById('cast').value,
+                mainCategory: document.getElementById('mainCategory').value,
+                subCategory: document.getElementById('subCategory').value,
+                subCategory2: document.getElementById('subCategory2').value,
+                subCategory3: document.getElementById('subCategory3').value,
+                filmDescription: document.getElementById('filmDescription').value,
+                personalReview: document.getElementById('personalReview').value
+            };
+
+            try {
+                let response;
+                if (currentFilmId) {
+                    // Обновление существующего
+                    response = await fetch(`${API_URL}/films/${currentFilmId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(filmData)
+                    });
+                } else {
+                    // Создание нового
+                    response = await fetch(`${API_URL}/films`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(filmData)
+                    });
+                }
+
+                const result = await response.json();
+                currentFilmId = result.id;
+
+                // Загрузка файлов
+                await uploadFiles();
+
+                alert('Фильм успешно сохранён!');
+                
+                // Выйти из режима редактирования
+                toggleEditMode();
+                
+                // Обновить URL если это была новая карточка
+                if (!urlParams.get('id')) {
+                    window.history.pushState({}, '', `edit-film.html?id=${currentFilmId}`);
+                }
+            } catch (error) {
+                console.error('Ошибка сохранения:', error);
+                alert('Ошибка при сохранении фильма');
+            }
+        }
+
+        async function uploadFiles() {
+            // Загрузка баннера
+            const bannerFile = document.getElementById('bannerInput').files[0];
+            if (bannerFile) {
+                const formData = new FormData();
+                formData.append('file', bannerFile);
+                await fetch(`${API_URL}/films/${currentFilmId}/upload/banner`, {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+
+            // Загрузка превью
+            for (let i = 0; i < 3; i++) {
+                const previewFile = document.getElementById(`preview${i + 1}Input`).files[0];
+                if (previewFile) {
+                    const formData = new FormData();
+                    formData.append('file', previewFile);
+                    await fetch(`${API_URL}/films/${currentFilmId}/upload/preview`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index1.html';
+        }
+    </script>
+</body>
+</html>

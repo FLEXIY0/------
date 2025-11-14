@@ -1,0 +1,6 @@
+node_modules/
+films_and_serials/
+*.log
+.DS_Store
+package-lock.json
+
