@@ -1,5 +1,6 @@
 node_modules/
 films_and_serials/
+ALL_CATEGORIES/
 *.log
 .DS_Store
 package-lock.json

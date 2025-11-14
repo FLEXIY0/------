@@ -13,6 +13,8 @@ app.use(express.json());
 app.use(express.static('.')); // Обслуживание статических файлов
 
 const FILMS_DIR = path.join(__dirname, 'films_and_serials');
+const CATEGORIES_DIR = path.join(__dirname, 'ALL_CATEGORIES');
+const CATEGORIES_FILE = path.join(CATEGORIES_DIR, 'categories.json');
 
 // Создание директории для фильмов если её нет
 async function ensureDir(dir) {
@@ -23,21 +25,50 @@ async function ensureDir(dir) {
     }
 }
 
-// Настройка multer для загрузки файлов
-const storage = multer.diskStorage({
+// Вспомогательная функция для удаления всех файлов в папке
+async function clearDirectory(dir) {
+    try {
+        const files = await fs.readdir(dir);
+        await Promise.all(files.map(file => fs.unlink(path.join(dir, file))));
+    } catch (error) {
+        // Папка не существует или пуста
+    }
+}
+
+// Настройка multer для загрузки баннера
+const bannerStorage = multer.diskStorage({
     destination: async (req, file, cb) => {
-        const { id, type } = req.params;
-        const uploadPath = path.join(FILMS_DIR, id, type);
+        const { id } = req.params;
+        const uploadPath = path.join(FILMS_DIR, id, 'banner');
         await ensureDir(uploadPath);
+        // Удаляем старые файлы
+        await clearDirectory(uploadPath);
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
+        // Используем фиксированное имя с оригинальным расширением
+        cb(null, 'banner' + path.extname(file.originalname));
     }
 });
 
-const upload = multer({ storage: storage });
+// Настройка multer для загрузки превью
+const previewStorage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+        const { id, previewNumber } = req.params;
+        const uploadPath = path.join(FILMS_DIR, id, 'preview', `preview${previewNumber}`);
+        await ensureDir(uploadPath);
+        // Удаляем старые файлы в этой подпапке
+        await clearDirectory(uploadPath);
+        cb(null, uploadPath);
+    },
+    filename: (req, file, cb) => {
+        // Используем фиксированное имя с оригинальным расширением
+        cb(null, 'preview' + path.extname(file.originalname));
+    }
+});
+
+const uploadBanner = multer({ storage: bannerStorage });
+const uploadPreview = multer({ storage: previewStorage });
 
 // Получить следующий доступный ID
 async function getNextId() {
@@ -87,13 +118,17 @@ app.get('/api/films/:id', async (req, res) => {
         
         // Получить пути к файлам
         const banner = await getFiles(path.join(filmDir, 'banner'));
-        const preview = await getFiles(path.join(filmDir, 'preview'));
+        const preview1 = await getFiles(path.join(filmDir, 'preview', 'preview1'));
+        const preview2 = await getFiles(path.join(filmDir, 'preview', 'preview2'));
+        const preview3 = await getFiles(path.join(filmDir, 'preview', 'preview3'));
         
         res.json({
             id,
             ...filmData,
             banner: banner[0] || null,
-            preview: preview[0] || null
+            preview1: preview1[0] || null,
+            preview2: preview2[0] || null,
+            preview3: preview3[0] || null
         });
     } catch (error) {
         res.status(404).json({ error: 'Film not found' });
@@ -119,9 +154,9 @@ app.post('/api/films', async (req, res) => {
         // Создать структуру папок
         await ensureDir(filmDir);
         await ensureDir(path.join(filmDir, 'banner'));
-        await ensureDir(path.join(filmDir, 'preview'));
-        await ensureDir(path.join(filmDir, 'description'));
-        await ensureDir(path.join(filmDir, 'personal_description'));
+        await ensureDir(path.join(filmDir, 'preview', 'preview1'));
+        await ensureDir(path.join(filmDir, 'preview', 'preview2'));
+        await ensureDir(path.join(filmDir, 'preview', 'preview3'));
         
         // Создать базовый data.json
         const initialData = {
@@ -133,8 +168,6 @@ app.post('/api/films', async (req, res) => {
             cast: req.body.cast || '',
             mainCategory: req.body.mainCategory || '',
             subCategory: req.body.subCategory || '',
-            subCategory2: req.body.subCategory2 || '',
-            subCategory3: req.body.subCategory3 || '',
             filmDescription: req.body.filmDescription || '',
             personalReview: req.body.personalReview || '',
             createdAt: new Date().toISOString()
@@ -184,29 +217,21 @@ app.put('/api/films/:id', async (req, res) => {
     }
 });
 
-// API: Загрузить файл (баннер, превью)
-app.post('/api/films/:id/upload/:type', upload.single('file'), async (req, res) => {
+// API: Загрузить баннер
+app.post('/api/films/:id/upload/banner', uploadBanner.single('file'), async (req, res) => {
     try {
         const filePath = path.relative(__dirname, req.file.path);
-        res.json({ path: filePath });
+        res.json({ path: filePath, success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// API: Сохранить текстовое описание
-app.post('/api/films/:id/description/:type', async (req, res) => {
+// API: Загрузить превью (с номером: 1, 2, 3)
+app.post('/api/films/:id/upload/preview/:previewNumber', uploadPreview.single('file'), async (req, res) => {
     try {
-        const { id, type } = req.params;
-        const { content } = req.body;
-        
-        const descDir = path.join(FILMS_DIR, id, type);
-        await ensureDir(descDir);
-        
-        const filePath = path.join(descDir, 'content.txt');
-        await fs.writeFile(filePath, content, 'utf8');
-        
-        res.json({ success: true });
+        const filePath = path.relative(__dirname, req.file.path);
+        res.json({ path: filePath, success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -245,9 +270,80 @@ async function generateFilmHTML(id, data) {
 </html>`;
 }
 
+// === КАТЕГОРИИ ===
+
+// Получить все категории
+async function getAllCategories() {
+    try {
+        await ensureDir(CATEGORIES_DIR);
+        const data = await fs.readFile(CATEGORIES_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch {
+        return [];
+    }
+}
+
+// Сохранить категории
+async function saveCategories(categories) {
+    await ensureDir(CATEGORIES_DIR);
+    await fs.writeFile(CATEGORIES_FILE, JSON.stringify(categories, null, 2));
+}
+
+// API: Получить все категории
+app.get('/api/categories', async (req, res) => {
+    try {
+        const categories = await getAllCategories();
+        res.json(categories);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// API: Добавить категорию
+app.post('/api/categories', async (req, res) => {
+    try {
+        const { name } = req.body;
+        
+        if (!name || !name.trim()) {
+            return res.status(400).json({ error: 'Название категории обязательно' });
+        }
+        
+        const categories = await getAllCategories();
+        const trimmedName = name.trim();
+        
+        // Проверка на дубликат
+        if (categories.find(c => c.toLowerCase() === trimmedName.toLowerCase())) {
+            return res.status(409).json({ error: 'Категория уже существует' });
+        }
+        
+        categories.push(trimmedName);
+        await saveCategories(categories);
+        
+        res.json({ success: true, categories });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// API: Удалить категорию
+app.delete('/api/categories/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const categories = await getAllCategories();
+        const filtered = categories.filter(c => c !== decodeURIComponent(name));
+        
+        await saveCategories(filtered);
+        
+        res.json({ success: true, categories: filtered });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Запуск сервера
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
     ensureDir(FILMS_DIR);
+    ensureDir(CATEGORIES_DIR);
 });
 

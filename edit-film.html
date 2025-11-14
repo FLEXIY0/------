@@ -1314,40 +1314,62 @@
         // Инициализация автокомплита
         countryAutocomplete.init();
 
-        // Управление сохраненными категориями
+        // Управление сохраненными категориями через API
         const CategoryManager = {
-            STORAGE_KEY: 'savedCategories',
-            
-            getAll() {
-                const saved = localStorage.getItem(this.STORAGE_KEY);
-                return saved ? JSON.parse(saved) : [];
+            async getAll() {
+                try {
+                    const response = await fetch(`${API_URL}/categories`);
+                    return await response.json();
+                } catch (error) {
+                    console.error('Ошибка загрузки категорий:', error);
+                    return [];
+                }
             },
             
-            save(categoryName) {
+            async save(categoryName) {
                 if (!categoryName || !categoryName.trim()) return false;
                 
-                const categories = this.getAll();
-                const trimmedName = categoryName.trim();
-                
-                // Проверка на дубликат
-                if (categories.find(c => c.toLowerCase() === trimmedName.toLowerCase())) {
+                try {
+                    const response = await fetch(`${API_URL}/categories`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: categoryName.trim() })
+                    });
+                    
+                    if (response.status === 409) {
+                        return false; // Категория уже существует
+                    }
+                    
+                    if (!response.ok) {
+                        throw new Error('Ошибка сохранения категории');
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка сохранения категории:', error);
                     return false;
                 }
-                
-                categories.push(trimmedName);
-                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(categories));
-                return true;
             },
             
-            delete(categoryName) {
-                const categories = this.getAll();
-                const filtered = categories.filter(c => c !== categoryName);
-                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
-                return true;
+            async delete(categoryName) {
+                try {
+                    const response = await fetch(`${API_URL}/categories/${encodeURIComponent(categoryName)}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Ошибка удаления категории');
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка удаления категории:', error);
+                    return false;
+                }
             },
             
-            exists(categoryName) {
-                const categories = this.getAll();
+            async exists(categoryName) {
+                const categories = await this.getAll();
                 return categories.some(c => c.toLowerCase() === categoryName.toLowerCase());
             }
         };
@@ -1390,8 +1412,8 @@
                 this.updateAddButton();
             },
             
-            filter(query) {
-                const categories = CategoryManager.getAll();
+            async filter(query) {
+                const categories = await CategoryManager.getAll();
                 const filtered = categories.filter(category => 
                     category.toLowerCase().includes(query.toLowerCase())
                 );
@@ -1447,7 +1469,7 @@
                 this.updateAddButton();
             },
             
-            saveCategory() {
+            async saveCategory() {
                 const categoryName = this.input.value.trim();
                 
                 if (!categoryName) {
@@ -1455,30 +1477,31 @@
                     return;
                 }
                 
-                if (CategoryManager.exists(categoryName)) {
+                if (await CategoryManager.exists(categoryName)) {
                     this.showNotification('Категория уже существует', 'warning');
                     return;
                 }
                 
-                if (CategoryManager.save(categoryName)) {
+                if (await CategoryManager.save(categoryName)) {
                     this.showNotification(`Категория "${categoryName}" сохранена`);
-                    this.updateAddButton();
+                    await this.updateAddButton();
                 }
             },
             
-            deleteCategory(categoryName) {
+            async deleteCategory(categoryName) {
                 if (confirm(`Удалить категорию "${categoryName}"?`)) {
-                    CategoryManager.delete(categoryName);
-                    this.showNotification(`Категория "${categoryName}" удалена`, 'warning');
-                    this.filter(this.input.value);
-                    this.updateAddButton();
+                    if (await CategoryManager.delete(categoryName)) {
+                        this.showNotification(`Категория "${categoryName}" удалена`, 'warning');
+                        await this.filter(this.input.value);
+                        await this.updateAddButton();
+                    }
                 }
             },
             
-            updateAddButton() {
+            async updateAddButton() {
                 const categoryName = this.input.value.trim();
                 
-                if (!categoryName || CategoryManager.exists(categoryName) || this.input.readOnly) {
+                if (!categoryName || await CategoryManager.exists(categoryName) || this.input.readOnly) {
                     this.addBtn.classList.add('disabled');
                 } else {
                     this.addBtn.classList.remove('disabled');
@@ -1545,8 +1568,20 @@
                 
                 setRating(data.rating || 0);
                 
+                // Загрузка баннера
                 if (data.banner) {
                     showBannerPreview(data.banner);
+                }
+                
+                // Загрузка превью
+                if (data.preview1) {
+                    showPreviewImage(0, data.preview1);
+                }
+                if (data.preview2) {
+                    showPreviewImage(1, data.preview2);
+                }
+                if (data.preview3) {
+                    showPreviewImage(2, data.preview3);
                 }
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
@@ -1865,13 +1900,14 @@
                 });
             }
 
-            // Загрузка превью
+            // Загрузка превью (каждое в свою подпапку)
             for (let i = 0; i < 3; i++) {
                 const previewFile = document.getElementById(`preview${i + 1}Input`).files[0];
                 if (previewFile) {
                     const formData = new FormData();
                     formData.append('file', previewFile);
-                    await fetch(`${API_URL}/films/${currentFilmId}/upload/preview`, {
+                    // Отправляем на endpoint с номером превью (1, 2, 3)
+                    await fetch(`${API_URL}/films/${currentFilmId}/upload/preview/${i + 1}`, {
                         method: 'POST',
                         body: formData
                     });

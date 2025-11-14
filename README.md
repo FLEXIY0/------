@@ -11,14 +11,21 @@ project/
 ├── edit-film.html           # Страница редактирования фильма
 ├── server.js                # Backend сервер (Node.js + Express)
 ├── package.json             # Зависимости Node.js
+├── ALL_CATEGORIES/          # Папка с глобальными категориями
+│   └── categories.json      # Список всех категорий
 ├── films_and_serials/       # Папка с данными фильмов (создается автоматически)
 │   ├── 1/
-│   │   ├── index.html
-│   │   ├── data.json
-│   │   ├── banner/          # Главный постер
-│   │   ├── preview/         # Превью изображения
-│   │   ├── description/     # Описание фильма (txt)
-│   │   └── personal_description/  # Личный отзыв (txt)
+│   │   ├── index.html       # Страница фильма
+│   │   ├── data.json        # Все данные (название, рейтинг, описание, отзыв)
+│   │   ├── banner/          # Главный постер (16:9)
+│   │   │   └── banner.ext
+│   │   └── preview/         # Превью изображения (16:9)
+│   │       ├── preview1/
+│   │       │   └── preview.ext
+│   │       ├── preview2/
+│   │       │   └── preview.ext
+│   │       └── preview3/
+│   │           └── preview.ext
 │   ├── 2/
 │   └── ...
 ```
@@ -57,6 +64,10 @@ project/
    - Проверка работы сервера
    - Автозапуск сервера если не запущен
    - Открытие страницы
+
+6. **`migrate-old-data.bat`** - Миграция старых данных
+   - Удаляет устаревшие папки description/ и personal_description/
+   - Все данные теперь хранятся в data.json
 
 ---
 
