@@ -22,6 +22,7 @@
             color: #9E9E9E;
             min-height: 100vh;
             padding: 20px;
+            color-scheme: dark;
         }
 
         .container {
@@ -425,6 +426,344 @@
             pointer-events: none;
         }
 
+        /* Custom Select Styles */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select {
+            position: relative;
+            width: 100%;
+            user-select: none;
+        }
+
+        .custom-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #9E9E9E;
+            font-size: 12px;
+            padding: 0;
+            margin-top: 5px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .custom-select.disabled .custom-select-trigger {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .custom-select-trigger:hover {
+            color: #ffffff;
+        }
+
+        .custom-select-arrow {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+
+        .custom-select.active .custom-select-arrow {
+            transform: rotate(180deg);
+        }
+
+        .custom-select-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .custom-select.active .custom-select-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            max-height: 250px;
+        }
+
+        .custom-select-options {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .custom-select-options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-select-options::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-select-options::-webkit-scrollbar-thumb {
+            background: #3e3e3e;
+            border-radius: 3px;
+        }
+
+        .custom-select-options::-webkit-scrollbar-thumb:hover {
+            background: #4e4e4e;
+        }
+
+        .custom-select-option {
+            padding: 8px 12px;
+            color: #9E9E9E;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 12px;
+        }
+
+        .custom-select-option:hover {
+            background: #3e3e3e;
+            color: #ffffff;
+        }
+
+        .custom-select-option.selected {
+            background: #3e3e3e;
+            color: #ffffff;
+        }
+
+        /* Autocomplete for Country */
+        .autocomplete-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .country-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+        }
+
+        .country-flag {
+            width: 18px;
+            height: 13px;
+            border-radius: 2px;
+            object-fit: cover;
+            flex-shrink: 0;
+            margin-right: 2px;
+        }
+
+        .country-input {
+            flex: 1;
+            margin-top: 0 !important;
+            padding-left: 2px;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .autocomplete-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            max-height: 250px;
+        }
+
+        .autocomplete-options {
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .autocomplete-options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .autocomplete-options::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .autocomplete-options::-webkit-scrollbar-thumb {
+            background: #3e3e3e;
+            border-radius: 3px;
+        }
+
+        .autocomplete-options::-webkit-scrollbar-thumb:hover {
+            background: #4e4e4e;
+        }
+
+        .autocomplete-option {
+            padding: 8px 12px;
+            color: #9E9E9E;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .autocomplete-option:hover {
+            background: #3e3e3e;
+            color: #ffffff;
+        }
+
+        .autocomplete-option .country-flag {
+            flex-shrink: 0;
+        }
+
+        .autocomplete-option-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .delete-category-btn {
+            width: 16px;
+            height: 16px;
+            background: transparent;
+            border: none;
+            color: #6e6e6e;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            padding: 0;
+            line-height: 1;
+            opacity: 0;
+            flex-shrink: 0;
+        }
+
+        .autocomplete-option:hover .delete-category-btn {
+            opacity: 1;
+        }
+
+        .delete-category-btn:hover {
+            background: #f44336;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .delete-category-btn:active {
+            transform: scale(0.9);
+        }
+
+        .autocomplete-no-results {
+            padding: 12px;
+            color: #6e6e6e;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Category Input Container */
+        .category-input-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .category-autocomplete-wrapper {
+            flex: 1;
+        }
+
+        .category-input {
+            font-weight: 600 !important;
+        }
+
+        .add-category-btn {
+            width: 24px;
+            height: 24px;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 4px;
+            color: #9E9E9E;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .add-category-btn:hover {
+            background: #4e4e4e;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .add-category-btn:active {
+            transform: scale(0.95);
+        }
+
+        .add-category-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Success Notification */
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification.show {
+            top: 20px;
+        }
+
+        .notification-icon {
+            font-size: 18px;
+        }
+
         .review-section {
             background: #212121;
             border-radius: 12px;
@@ -526,6 +865,12 @@
     </style>
 </head>
 <body>
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span class="notification-icon">✓</span>
+        <span id="notificationText">Категория сохранена</span>
+    </div>
+
     <div class="container">
         <div class="header">
             <button class="back-button" onclick="goBack()">←</button>
@@ -600,36 +945,63 @@
                     <div class="metadata-text">Основные метрики по фильму (можно написать самому, а можно будет подгружать через API)</div>
                     <div class="metadata-grid">
                         <div class="metadata-item">
-                            <div>год только год</div>
-                            <input type="text" class="metadata-input" id="year" placeholder="" readonly>
+                            <div>Год производства</div>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="customYearSelect">
+                                    <div class="custom-select-trigger" id="yearSelectTrigger">
+                                        <span id="yearSelectValue">Выберите год</span>
+                                        <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown" id="yearSelectDropdown">
+                                        <div class="custom-select-options" id="yearSelectOptions">
+                                            <!-- Годы будут добавлены через JS -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="year" name="year" value="">
+                            </div>
                         </div>
                         <div class="metadata-item">
-                            <div>страна</div>
-                            <input type="text" class="metadata-input" id="country" placeholder="" readonly>
+                            <div>Страна</div>
+                            <div class="autocomplete-wrapper">
+                                <div class="country-input-wrapper">
+                                    <img class="country-flag" id="countryFlag" src="" alt="" style="display: none;">
+                                    <input type="text" class="metadata-input country-input" id="country" placeholder="" readonly autocomplete="off">
+                                </div>
+                                <div class="autocomplete-dropdown" id="countryDropdown">
+                                    <div class="autocomplete-options" id="countryOptions">
+                                        <!-- Страны будут добавлены через JS -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="metadata-item">
-                            <div>сценарист</div>
+                            <div>Режиссёр</div>
                             <input type="text" class="metadata-input" id="director" placeholder="" readonly>
                         </div>
                         <div class="metadata-item">
-                            <div>актёрский состав</div>
+                            <div>Актёрский состав</div>
                             <input type="text" class="metadata-input" id="cast" placeholder="" readonly>
                         </div>
                         <div class="metadata-item">
-                            <div>основная категория</div>
-                            <input type="text" class="metadata-input" id="mainCategory" placeholder="" readonly>
+                            <div>Основная категория</div>
+                            <div class="category-input-container">
+                                <div class="autocomplete-wrapper category-autocomplete-wrapper">
+                                    <input type="text" class="metadata-input category-input" id="mainCategory" placeholder="" readonly autocomplete="off">
+                                    <div class="autocomplete-dropdown" id="categoryDropdown">
+                                        <div class="autocomplete-options" id="categoryOptions">
+                                            <!-- Категории будут добавлены через JS -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="add-category-btn" id="addCategoryBtn" type="button" title="Сохранить категорию">+</button>
+                            </div>
                         </div>
                         <div class="metadata-item">
-                            <div>подкатегория</div>
+                            <div>Подкатегории</div>
                             <input type="text" class="metadata-input" id="subCategory" placeholder="" readonly>
-                        </div>
-                        <div class="metadata-item">
-                            <div>под категория 2</div>
-                            <input type="text" class="metadata-input" id="subCategory2" placeholder="" readonly>
-                        </div>
-                        <div class="metadata-item">
-                            <div>под категория 3</div>
-                            <input type="text" class="metadata-input" id="subCategory3" placeholder="" readonly>
                         </div>
                     </div>
                 </div>
@@ -659,6 +1031,495 @@
         const urlParams = new URLSearchParams(window.location.search);
         currentFilmId = urlParams.get('id');
 
+        // Кастомный Year Select
+        const customYearSelect = {
+            element: document.getElementById('customYearSelect'),
+            trigger: document.getElementById('yearSelectTrigger'),
+            dropdown: document.getElementById('yearSelectDropdown'),
+            options: document.getElementById('yearSelectOptions'),
+            valueDisplay: document.getElementById('yearSelectValue'),
+            hiddenInput: document.getElementById('year'),
+            isOpen: false,
+            
+            init() {
+                // Генерация годов
+                const currentYear = new Date().getFullYear();
+                const startYear = 1900;
+                const endYear = currentYear + 5;
+                
+                this.options.innerHTML = '';
+                
+                for (let year = endYear; year >= startYear; year--) {
+                    const option = document.createElement('div');
+                    option.className = 'custom-select-option';
+                    option.textContent = year;
+                    option.dataset.value = year;
+                    option.addEventListener('click', () => this.selectOption(option));
+                    this.options.appendChild(option);
+                }
+                
+                // Обработчики
+                this.trigger.addEventListener('click', (e) => {
+                    if (!this.element.classList.contains('disabled')) {
+                        e.stopPropagation();
+                        this.toggle();
+                    }
+                });
+                
+                // Закрытие при клике вне
+                document.addEventListener('click', (e) => {
+                    if (!this.element.contains(e.target)) {
+                        this.close();
+                    }
+                });
+            },
+            
+            toggle() {
+                this.isOpen ? this.close() : this.open();
+            },
+            
+            open() {
+                this.element.classList.add('active');
+                this.isOpen = true;
+            },
+            
+            close() {
+                this.element.classList.remove('active');
+                this.isOpen = false;
+            },
+            
+            selectOption(option) {
+                const value = option.dataset.value;
+                
+                // Убрать selected у всех
+                this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Добавить selected к выбранному
+                option.classList.add('selected');
+                
+                // Обновить значение
+                this.valueDisplay.textContent = value;
+                this.hiddenInput.value = value;
+                
+                this.close();
+            },
+            
+            setValue(value) {
+                if (value) {
+                    this.valueDisplay.textContent = value;
+                    this.hiddenInput.value = value;
+                    
+                    // Отметить опцию как selected
+                    this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                        if (opt.dataset.value === value.toString()) {
+                            opt.classList.add('selected');
+                        } else {
+                            opt.classList.remove('selected');
+                        }
+                    });
+                } else {
+                    this.valueDisplay.textContent = 'Выберите год';
+                    this.hiddenInput.value = '';
+                    this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                }
+            },
+            
+            setDisabled(disabled) {
+                if (disabled) {
+                    this.element.classList.add('disabled');
+                    this.close();
+                } else {
+                    this.element.classList.remove('disabled');
+                }
+            }
+        };
+
+        // Инициализация
+        customYearSelect.init();
+
+        // Список стран с кодами для флагов (используем flagcdn.com)
+        const countries = [
+            { name: 'Россия', code: 'ru' },
+            { name: 'США', code: 'us' },
+            { name: 'Великобритания', code: 'gb' },
+            { name: 'Германия', code: 'de' },
+            { name: 'Франция', code: 'fr' },
+            { name: 'Италия', code: 'it' },
+            { name: 'Испания', code: 'es' },
+            { name: 'Канада', code: 'ca' },
+            { name: 'Япония', code: 'jp' },
+            { name: 'Китай', code: 'cn' },
+            { name: 'Индия', code: 'in' },
+            { name: 'Бразилия', code: 'br' },
+            { name: 'Австралия', code: 'au' },
+            { name: 'Мексика', code: 'mx' },
+            { name: 'Южная Корея', code: 'kr' },
+            { name: 'Нидерланды', code: 'nl' },
+            { name: 'Швеция', code: 'se' },
+            { name: 'Норвегия', code: 'no' },
+            { name: 'Дания', code: 'dk' },
+            { name: 'Финляндия', code: 'fi' },
+            { name: 'Польша', code: 'pl' },
+            { name: 'Украина', code: 'ua' },
+            { name: 'Беларусь', code: 'by' },
+            { name: 'Казахстан', code: 'kz' },
+            { name: 'Турция', code: 'tr' },
+            { name: 'Израиль', code: 'il' },
+            { name: 'Аргентина', code: 'ar' },
+            { name: 'Чили', code: 'cl' },
+            { name: 'Колумбия', code: 'co' },
+            { name: 'Перу', code: 'pe' },
+            { name: 'Венесуэла', code: 've' },
+            { name: 'ЮАР', code: 'za' },
+            { name: 'Египет', code: 'eg' },
+            { name: 'Таиланд', code: 'th' },
+            { name: 'Вьетнам', code: 'vn' },
+            { name: 'Индонезия', code: 'id' },
+            { name: 'Малайзия', code: 'my' },
+            { name: 'Сингапур', code: 'sg' },
+            { name: 'Филиппины', code: 'ph' },
+            { name: 'Пакистан', code: 'pk' },
+            { name: 'Бангладеш', code: 'bd' },
+            { name: 'Иран', code: 'ir' },
+            { name: 'Ирак', code: 'iq' },
+            { name: 'Саудовская Аравия', code: 'sa' },
+            { name: 'ОАЭ', code: 'ae' },
+            { name: 'Греция', code: 'gr' },
+            { name: 'Португалия', code: 'pt' },
+            { name: 'Бельгия', code: 'be' },
+            { name: 'Австрия', code: 'at' },
+            { name: 'Швейцария', code: 'ch' },
+            { name: 'Чехия', code: 'cz' },
+            { name: 'Венгрия', code: 'hu' },
+            { name: 'Румыния', code: 'ro' },
+            { name: 'Болгария', code: 'bg' },
+            { name: 'Хорватия', code: 'hr' },
+            { name: 'Сербия', code: 'rs' },
+            { name: 'Словения', code: 'si' },
+            { name: 'Словакия', code: 'sk' },
+            { name: 'Литва', code: 'lt' },
+            { name: 'Латвия', code: 'lv' },
+            { name: 'Эстония', code: 'ee' },
+            { name: 'Ирландия', code: 'ie' },
+            { name: 'Исландия', code: 'is' },
+            { name: 'Новая Зеландия', code: 'nz' },
+            { name: 'СССР', code: 'su' }
+        ];
+
+        // Автокомплит для страны
+        const countryAutocomplete = {
+            input: document.getElementById('country'),
+            dropdown: document.getElementById('countryDropdown'),
+            options: document.getElementById('countryOptions'),
+            flag: document.getElementById('countryFlag'),
+            isOpen: false,
+            selectedCountry: null,
+            
+            init() {
+                // Обработчик ввода
+                this.input.addEventListener('input', (e) => {
+                    if (this.input.readOnly) return;
+                    this.filter(e.target.value);
+                });
+                
+                // Обработчик фокуса
+                this.input.addEventListener('focus', () => {
+                    if (!this.input.readOnly) {
+                        this.filter(this.input.value);
+                    }
+                });
+                
+                // Закрытие при клике вне
+                document.addEventListener('click', (e) => {
+                    if (!this.input.parentElement.parentElement.contains(e.target)) {
+                        this.close();
+                    }
+                });
+            },
+            
+            filter(query) {
+                const filtered = countries.filter(country => 
+                    country.name.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                this.renderOptions(filtered);
+                
+                if (filtered.length > 0) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            },
+            
+            renderOptions(filteredCountries) {
+                this.options.innerHTML = '';
+                
+                if (filteredCountries.length === 0) {
+                    this.options.innerHTML = '<div class="autocomplete-no-results">Не найдено</div>';
+                    return;
+                }
+                
+                filteredCountries.forEach(country => {
+                    const option = document.createElement('div');
+                    option.className = 'autocomplete-option';
+                    option.innerHTML = `
+                        <img class="country-flag" src="https://flagcdn.com/w40/${country.code}.png" alt="${country.name}">
+                        <span>${country.name}</span>
+                    `;
+                    option.addEventListener('click', () => this.select(country));
+                    this.options.appendChild(option);
+                });
+            },
+            
+            select(country) {
+                this.selectedCountry = country;
+                this.input.value = country.name;
+                this.flag.src = `https://flagcdn.com/w40/${country.code}.png`;
+                this.flag.style.display = 'block';
+                this.close();
+            },
+            
+            setValue(countryName) {
+                if (countryName) {
+                    const country = countries.find(c => c.name === countryName);
+                    if (country) {
+                        this.select(country);
+                    } else {
+                        // Если страна не найдена в списке, просто устанавливаем текст
+                        this.input.value = countryName;
+                        this.flag.style.display = 'none';
+                    }
+                } else {
+                    this.input.value = '';
+                    this.flag.style.display = 'none';
+                    this.selectedCountry = null;
+                }
+            },
+            
+            open() {
+                this.dropdown.classList.add('active');
+                this.isOpen = true;
+            },
+            
+            close() {
+                this.dropdown.classList.remove('active');
+                this.isOpen = false;
+            }
+        };
+
+        // Инициализация автокомплита
+        countryAutocomplete.init();
+
+        // Управление сохраненными категориями
+        const CategoryManager = {
+            STORAGE_KEY: 'savedCategories',
+            
+            getAll() {
+                const saved = localStorage.getItem(this.STORAGE_KEY);
+                return saved ? JSON.parse(saved) : [];
+            },
+            
+            save(categoryName) {
+                if (!categoryName || !categoryName.trim()) return false;
+                
+                const categories = this.getAll();
+                const trimmedName = categoryName.trim();
+                
+                // Проверка на дубликат
+                if (categories.find(c => c.toLowerCase() === trimmedName.toLowerCase())) {
+                    return false;
+                }
+                
+                categories.push(trimmedName);
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(categories));
+                return true;
+            },
+            
+            delete(categoryName) {
+                const categories = this.getAll();
+                const filtered = categories.filter(c => c !== categoryName);
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
+                return true;
+            },
+            
+            exists(categoryName) {
+                const categories = this.getAll();
+                return categories.some(c => c.toLowerCase() === categoryName.toLowerCase());
+            }
+        };
+
+        // Автокомплит для категорий
+        const categoryAutocomplete = {
+            input: document.getElementById('mainCategory'),
+            dropdown: document.getElementById('categoryDropdown'),
+            options: document.getElementById('categoryOptions'),
+            addBtn: document.getElementById('addCategoryBtn'),
+            isOpen: false,
+            
+            init() {
+                // Обработчик ввода
+                this.input.addEventListener('input', (e) => {
+                    if (this.input.readOnly) return;
+                    this.filter(e.target.value);
+                    this.updateAddButton();
+                });
+                
+                // Обработчик фокуса
+                this.input.addEventListener('focus', () => {
+                    if (!this.input.readOnly) {
+                        this.filter(this.input.value);
+                    }
+                });
+                
+                // Закрытие при клике вне
+                document.addEventListener('click', (e) => {
+                    if (!this.input.parentElement.contains(e.target) && e.target !== this.addBtn) {
+                        this.close();
+                    }
+                });
+                
+                // Обработчик кнопки добавления
+                this.addBtn.addEventListener('click', () => {
+                    this.saveCategory();
+                });
+                
+                this.updateAddButton();
+            },
+            
+            filter(query) {
+                const categories = CategoryManager.getAll();
+                const filtered = categories.filter(category => 
+                    category.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                this.renderOptions(filtered);
+                
+                if (filtered.length > 0 && query) {
+                    this.open();
+                } else {
+                    this.close();
+                }
+            },
+            
+            renderOptions(filteredCategories) {
+                this.options.innerHTML = '';
+                
+                if (filteredCategories.length === 0) {
+                    this.options.innerHTML = '<div class="autocomplete-no-results">Не найдено</div>';
+                    return;
+                }
+                
+                filteredCategories.forEach(category => {
+                    const option = document.createElement('div');
+                    option.className = 'autocomplete-option';
+                    
+                    const content = document.createElement('div');
+                    content.className = 'autocomplete-option-content';
+                    
+                    const text = document.createElement('span');
+                    text.textContent = category;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-category-btn';
+                    deleteBtn.innerHTML = '×';
+                    deleteBtn.title = 'Удалить категорию';
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.deleteCategory(category);
+                    });
+                    
+                    content.appendChild(text);
+                    content.appendChild(deleteBtn);
+                    option.appendChild(content);
+                    
+                    option.addEventListener('click', () => this.select(category));
+                    this.options.appendChild(option);
+                });
+            },
+            
+            select(category) {
+                this.input.value = category;
+                this.close();
+                this.updateAddButton();
+            },
+            
+            saveCategory() {
+                const categoryName = this.input.value.trim();
+                
+                if (!categoryName) {
+                    this.showNotification('Введите название категории', 'error');
+                    return;
+                }
+                
+                if (CategoryManager.exists(categoryName)) {
+                    this.showNotification('Категория уже существует', 'warning');
+                    return;
+                }
+                
+                if (CategoryManager.save(categoryName)) {
+                    this.showNotification(`Категория "${categoryName}" сохранена`);
+                    this.updateAddButton();
+                }
+            },
+            
+            deleteCategory(categoryName) {
+                if (confirm(`Удалить категорию "${categoryName}"?`)) {
+                    CategoryManager.delete(categoryName);
+                    this.showNotification(`Категория "${categoryName}" удалена`, 'warning');
+                    this.filter(this.input.value);
+                    this.updateAddButton();
+                }
+            },
+            
+            updateAddButton() {
+                const categoryName = this.input.value.trim();
+                
+                if (!categoryName || CategoryManager.exists(categoryName) || this.input.readOnly) {
+                    this.addBtn.classList.add('disabled');
+                } else {
+                    this.addBtn.classList.remove('disabled');
+                }
+            },
+            
+            showNotification(text, type = 'success') {
+                const notification = document.getElementById('notification');
+                const notificationText = document.getElementById('notificationText');
+                
+                // Изменить цвет в зависимости от типа
+                if (type === 'error') {
+                    notification.style.background = '#f44336';
+                } else if (type === 'warning') {
+                    notification.style.background = '#ff9800';
+                } else {
+                    notification.style.background = '#4caf50';
+                }
+                
+                notificationText.textContent = text;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            },
+            
+            open() {
+                this.dropdown.classList.add('active');
+                this.isOpen = true;
+            },
+            
+            close() {
+                this.dropdown.classList.remove('active');
+                this.isOpen = false;
+            }
+        };
+
+        // Инициализация автокомплита категорий
+        categoryAutocomplete.init();
+
         // Загрузка данных при открытии
         if (currentFilmId) {
             loadFilmData(currentFilmId);
@@ -673,14 +1534,12 @@
                 const data = await response.json();
                 
                 document.getElementById('filmTitle').value = data.title || '';
-                document.getElementById('year').value = data.year || '';
-                document.getElementById('country').value = data.country || '';
+                customYearSelect.setValue(data.year || '');
+                countryAutocomplete.setValue(data.country || '');
                 document.getElementById('director').value = data.director || '';
                 document.getElementById('cast').value = data.cast || '';
                 document.getElementById('mainCategory').value = data.mainCategory || '';
                 document.getElementById('subCategory').value = data.subCategory || '';
-                document.getElementById('subCategory2').value = data.subCategory2 || '';
-                document.getElementById('subCategory3').value = data.subCategory3 || '';
                 document.getElementById('filmDescription').value = data.filmDescription || '';
                 document.getElementById('personalReview').value = data.personalReview || '';
                 
@@ -711,16 +1570,17 @@
             
             // Все поля ввода
             document.getElementById('filmTitle').readOnly = !isEditMode;
-            document.getElementById('year').readOnly = !isEditMode;
+            customYearSelect.setDisabled(!isEditMode);
             document.getElementById('country').readOnly = !isEditMode;
             document.getElementById('director').readOnly = !isEditMode;
             document.getElementById('cast').readOnly = !isEditMode;
             document.getElementById('mainCategory').readOnly = !isEditMode;
             document.getElementById('subCategory').readOnly = !isEditMode;
-            document.getElementById('subCategory2').readOnly = !isEditMode;
-            document.getElementById('subCategory3').readOnly = !isEditMode;
             document.getElementById('filmDescription').readOnly = !isEditMode;
             document.getElementById('personalReview').readOnly = !isEditMode;
+            
+            // Обновить кнопку добавления категории
+            categoryAutocomplete.updateAddButton();
             
             // Постер
             const posterSection = document.getElementById('posterSection');
@@ -950,8 +1810,6 @@
                 cast: document.getElementById('cast').value,
                 mainCategory: document.getElementById('mainCategory').value,
                 subCategory: document.getElementById('subCategory').value,
-                subCategory2: document.getElementById('subCategory2').value,
-                subCategory3: document.getElementById('subCategory3').value,
                 filmDescription: document.getElementById('filmDescription').value,
                 personalReview: document.getElementById('personalReview').value
             };
