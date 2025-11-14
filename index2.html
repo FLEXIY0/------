@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фильмы и Сериалы - Просмотренные</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -12,8 +14,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background: #141414;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -36,7 +41,7 @@
             position: relative;
             width: 80px;
             height: 80px;
-            background: #d3d3d3;
+            background: #212121;
             border-radius: 8px;
             display: flex;
             justify-content: center;
@@ -48,13 +53,13 @@
         }
 
         .tile:hover {
-            border-color: #4a90e2;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            border-color: #323232;
+            box-shadow: 0 4px 12px rgba(55, 55, 55, 0.3);
             transform: scale(1.05);
         }
 
         .tile:last-child {
-            background: #e0e0e0;
+            background: #212121;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,8 +68,8 @@
         .tile:last-child::before {
             content: '•••';
             font-size: 30px;
-            font-weight: bold;
-            color: #000;
+            font-weight: 400;
+            color: #9E9E9E;
             line-height: 1;
             text-align: center;
             display: flex;
@@ -74,7 +79,7 @@
         }
 
         .tile:last-child:hover {
-            background: #c0c0c0;
+            background: #323232;
         }
 
         .tile-label {
@@ -82,8 +87,8 @@
             top: -40px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(128, 136, 151, 0.405);
-            color: rgb(0, 0, 0);
+            background: rgba(62, 62, 62, 0.9);
+            color: #9E9E9E;
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -105,12 +110,12 @@
             top: 0;
             width: 300px;
             height: 100%;
-            background: #d3d3d3;
+            background: #212121;
             transform: translateX(-100%);
             transition: transform 0.4s ease-out;
             z-index: 5;
             padding: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
         }
@@ -121,10 +126,11 @@
 
         .sidebar-header {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 400;
+            color: #9E9E9E;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #b3b3b3;
+            border-bottom: 2px solid #323232;
         }
 
         .sidebar-menu {
@@ -137,7 +143,8 @@
         .sidebar-menu li {
             padding: 12px 15px;
             margin-bottom: 8px;
-            background: #e0e0e0;
+            background: #3e3e3e;
+            color: #9E9E9E;
             border-radius: 6px;
             cursor: pointer;
             transition: background 0.2s ease;
@@ -148,7 +155,7 @@
         }
 
         .sidebar-menu li:hover {
-            background: #c0c0c0;
+            background: #323232;
         }
 
         .delete-btn {
@@ -156,7 +163,7 @@
             border: none;
             font-size: 18px;
             cursor: pointer;
-            color: #ff4444;
+            color: #9E9E9E;
             opacity: 0;
             transition: opacity 0.2s ease;
         }
@@ -168,19 +175,20 @@
         .add-btn {
             width: 40px;
             height: 40px;
-            background: #e0e0e0;
+            background: #3e3e3e;
+            color: #9E9E9E;
             border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 400;
             transition: background 0.2s ease;
         }
 
         .add-btn:hover {
-            background: #c0c0c0;
+            background: #323232;
         }
 
         .modal {
@@ -205,7 +213,7 @@
         }
 
         .modal-content {
-            background: white;
+            background: #212121;
             padding: 20px;
             border-radius: 8px;
             width: 300px;
@@ -214,11 +222,12 @@
 
         .modal-title {
             font-size: 18px;
+            color: #9E9E9E;
             margin-bottom: 15px;
         }
 
         .error-message {
-            color: #ff4444;
+            color: #9E9E9E;
             font-size: 14px;
             margin-top: 5px;
         }
@@ -234,17 +243,17 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 400;
         }
 
         .confirm-btn {
-            background: #4a90e2;
-            color: white;
+            background: #3e3e3e;
+            color: #9E9E9E;
         }
 
         .cancel-btn {
-            background: #e0e0e0;
-            color: #000;
+            background: #323232;
+            color: #9E9E9E;
         }
 
         .input-modal {
@@ -269,7 +278,7 @@
         }
 
         .input-modal-content {
-            background: white;
+            background: #212121;
             padding: 20px;
             border-radius: 8px;
             width: 300px;
@@ -277,6 +286,7 @@
 
         .input-modal-title {
             font-size: 18px;
+            color: #9E9E9E;
             margin-bottom: 15px;
         }
 
@@ -284,7 +294,9 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #323232;
+            background: #3e3e3e;
+            color: #9E9E9E;
             border-radius: 4px;
         }
 

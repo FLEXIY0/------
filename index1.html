@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фильмы и Сериалы</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -12,8 +14,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            background: #141414;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,30 +28,30 @@
 
         .container {
             display: flex;
-            gap: 30px;
+            gap: 45px;
             position: relative;
         }
 
         .tile {
             position: relative;
-            width: 130px;
-            height: 130px;
-            background: #d3d3d3;
-            border-radius: 10px;
+            width: 195px;
+            height: 195px;
+            background: #212121;
+            border-radius: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
-            font-weight: 600;
-            color: #000;
+            font-size: 27px;
+            font-weight: 400;
+            color: #9E9E9E;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 3px solid transparent;
         }
 
         .tile:hover {
-            border-color: #4a90e2;
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            border-color: #323232;
+            box-shadow: 0 4px 12px rgba(55, 55, 55, 0.3);
         }
 
         .container:has(.tile:hover) .tile:not(:hover) {
@@ -60,7 +65,7 @@
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 22px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -73,34 +78,35 @@
         }
 
         .submenu-left {
-            right: calc(100% + 20px);
+            right: calc(100% + 30px);
         }
 
         .submenu-right {
-            left: calc(100% + 20px);
+            left: calc(100% + 30px);
         }
-
+        
         .submenu a {    
             display: block;
-            padding: 12px 24px;
-            background: #d3d3d3;
-            color: #000;
+            padding: 18px 36px;
+            background: #3e3e3e;
+            color: #9E9E9E;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            border-radius: 12px;
+            font-size: 21px;
+            font-weight: 400;
             white-space: nowrap;
             transition: all 0.2s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .submenu a:hover {
-            background: #c0c0c0;
-            transform: translateX(5px);
+            background: #212121;
+            transform: translateX(8px);
+            
         }
 
         .submenu-left a:hover {
-            transform: translateX(-5px);
+            transform: translateX(-8px);
         }
 
         @media (max-width: 768px) {
