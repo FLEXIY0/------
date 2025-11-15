@@ -167,9 +167,12 @@ app.post('/api/films', async (req, res) => {
             director: req.body.director || '',
             cast: req.body.cast || '',
             mainCategory: req.body.mainCategory || '',
-            subCategory: req.body.subCategory || '',
+            subCategories: req.body.subCategories || [],
             filmDescription: req.body.filmDescription || '',
             personalReview: req.body.personalReview || '',
+            contentType: req.body.contentType || '',
+            watchStatus: req.body.watchStatus || '',
+            lastEpisode: req.body.lastEpisode || '',
             createdAt: new Date().toISOString()
         };
         
