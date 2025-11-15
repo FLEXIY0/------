@@ -6,6 +6,7 @@
     <title>Карточка фильма</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
         * {
             margin: 0;
@@ -57,6 +58,15 @@
 
         .back-button:hover {
             background: #323232;
+        }
+
+        .back-button .material-symbols-outlined {
+            font-size: 24px;
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 600,
+                'GRAD' 0,
+                'opsz' 24;
         }
 
         .title-display {
@@ -1595,7 +1605,9 @@
 
     <div class="container">
         <div class="header">
-            <button class="back-button" onclick="goBack()">←</button>
+            <button class="back-button" onclick="goBack()">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
             <input type="text" class="title-display" id="filmTitle" placeholder="название фильма" readonly>
         </div>
 

@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список фильмов</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: #141414;
+            color: #9E9E9E;
+            min-height: 100vh;
+            padding: 20px;
+            color-scheme: dark;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .main-section {
+            width: 100%;
+        }
+
+        .preview-placeholder {
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            background: #212121;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header {
+            display: none; /* Временно скрыт - можно включить изменив на "flex" */
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            background: #212121;
+            padding: 15px 20px;
+            border-radius: 12px;
+        }
+
+        .back-button {
+            width: 50px;
+            height: 50px;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 8px;
+            color: #9E9E9E;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #323232;
+        }
+
+        .back-button .material-symbols-outlined {
+            font-size: 24px;
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 600,
+                'GRAD' 0,
+                'opsz' 24;
+        }
+
+        h1 {
+            flex: 1;
+            color: #B8B8B8;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Панель фильтров */
+        .filter-panel {
+            background: #212121;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .filters-compact {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-toggle {
+            padding: 10px 16px;
+            background: #2a2a2a;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #9E9E9E;
+            font-size: 13px;
+            font-family: "Inter", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-toggle:hover {
+            background: #3e3e3e;
+            color: #B8B8B8;
+        }
+
+        .filter-toggle.active {
+            background: #3e3e3e;
+            border-color: #ff9d00;
+            color: #B8B8B8;
+        }
+
+        .filter-toggle .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        .filter-badge {
+            background: #ff9d00;
+            color: #141414;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .filter-expanded {
+            margin-top: 15px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .filter-expanded.show {
+            display: block;
+        }
+
+        .filter-expanded-title {
+            color: #B8B8B8;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-close {
+            color: #666;
+            cursor: pointer;
+            font-size: 20px;
+            transition: color 0.2s;
+        }
+
+        .filter-close:hover {
+            color: #9E9E9E;
+        }
+
+        /* Сортировка по рейтингу */
+        .rating-sort {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .rating-sort-btn {
+            flex: 1;
+            padding: 10px;
+            background: #2a2a2a;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #9E9E9E;
+            font-size: 13px;
+            font-family: "Inter", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rating-sort-btn:hover {
+            background: #3e3e3e;
+        }
+
+        .rating-sort-btn.active {
+            background: #3e3e3e;
+            border-color: #ff9d00;
+            color: #B8B8B8;
+        }
+
+        /* Фильтр по звездам */
+        .stars-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stars-filter-label {
+            color: #9E9E9E;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .stars-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .star-btn {
+            background: none;
+            border: none;
+            color: #4a4a4a;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .star-btn:hover {
+            color: #ff9d00;
+            transform: scale(1.1);
+        }
+
+        .star-btn.active {
+            color: #ff9d00;
+        }
+
+        .star-btn.selected {
+            color: #ff9d00;
+        }
+
+        .clear-stars {
+            padding: 6px 12px;
+            background: #2a2a2a;
+            border: none;
+            border-radius: 6px;
+            color: #9E9E9E;
+            font-size: 11px;
+            font-family: "Inter", sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .clear-stars:hover {
+            background: #3e3e3e;
+        }
+
+        /* Скрытые фильтры */
+        .hidden-filters-btn {
+            padding: 10px 16px;
+            background: #2a2a2a;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #9E9E9E;
+            font-size: 13px;
+            font-family: "Inter", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hidden-filters-btn:hover {
+            background: #3e3e3e;
+            color: #B8B8B8;
+        }
+
+        .hidden-filters-btn.active {
+            background: #3e3e3e;
+            border-color: #ff9d00;
+            color: #B8B8B8;
+        }
+
+        .hidden-filters-btn .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        .hidden-filters-panel {
+            margin-top: 15px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .hidden-filters-panel.show {
+            display: block;
+        }
+
+        .hidden-filter-group {
+            margin-bottom: 15px;
+        }
+
+        .hidden-filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .hidden-filter-label {
+            color: #B8B8B8;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .hidden-filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hidden-filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .hidden-filter-option:hover {
+            background: #3e3e3e;
+        }
+
+        .hidden-filter-option.selected {
+            background: #3e3e3e;
+        }
+
+        .hidden-filter-checkbox {
+            width: 16px;
+            height: 16px;
+            background: #141414;
+            border: 2px solid #4a4a4a;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff9d00;
+            font-size: 12px;
+        }
+
+        .hidden-filter-option.selected .hidden-filter-checkbox {
+            border-color: #ff9d00;
+        }
+
+        .hidden-filter-text {
+            color: #9E9E9E;
+            font-size: 13px;
+        }
+
+        .hidden-filter-option.selected .hidden-filter-text {
+            color: #B8B8B8;
+        }
+
+        /* Range slider для года */
+        .year-range-container {
+            padding: 10px 0;
+        }
+
+        .year-values {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #B8B8B8;
+            font-size: 13px;
+        }
+
+        .year-slider {
+            position: relative;
+            height: 6px;
+            background: #2a2a2a;
+            border-radius: 3px;
+        }
+
+        .year-slider-track {
+            position: absolute;
+            height: 100%;
+            background: #ff9d00;
+            border-radius: 3px;
+        }
+
+        .year-input {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+            top: 0;
+        }
+
+        .year-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            pointer-events: all;
+            width: 16px;
+            height: 16px;
+            background: #ff9d00;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #141414;
+        }
+
+        .year-input::-moz-range-thumb {
+            pointer-events: all;
+            width: 16px;
+            height: 16px;
+            background: #ff9d00;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #141414;
+        }
+
+        /* Выпадающий список с чекбоксами */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            width: 100%;
+            padding: 10px 12px;
+            background: #2a2a2a;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #9E9E9E;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-trigger:hover {
+            background: #3e3e3e;
+        }
+
+        .dropdown-trigger.active {
+            border-color: #ff9d00;
+            background: #3e3e3e;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 5px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-item:hover {
+            background: #3e3e3e;
+        }
+
+        .dropdown-checkbox {
+            width: 18px;
+            height: 18px;
+            background: #141414;
+            border: 2px solid #4a4a4a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff9d00;
+            font-size: 14px;
+        }
+
+        .dropdown-item.selected .dropdown-checkbox {
+            border-color: #ff9d00;
+        }
+
+        .dropdown-item-label {
+            color: #9E9E9E;
+            font-size: 13px;
+        }
+
+        .dropdown-item.selected .dropdown-item-label {
+            color: #B8B8B8;
+        }
+
+        /* Поиск режиссера */
+        .search-dropdown {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #2a2a2a;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: #B8B8B8;
+            font-size: 13px;
+            font-family: "Inter", sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff9d00;
+            background: #3e3e3e;
+        }
+
+        .search-input::placeholder {
+            color: #666;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 5px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-results.show {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            color: #9E9E9E;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: #3e3e3e;
+            color: #B8B8B8;
+        }
+
+        .search-result-item.selected {
+            background: #3e3e3e;
+            color: #ff9d00;
+        }
+
+        .clear-filters-btn {
+            padding: 10px 16px;
+            background: #2a2a2a;
+            border: none;
+            border-radius: 8px;
+            color: #9E9E9E;
+            font-size: 13px;
+            font-family: "Inter", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .clear-filters-btn:hover {
+            background: #3e3e3e;
+            color: #B8B8B8;
+        }
+
+        .clear-filters-btn .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        /* Таблица */
+        .table-container {
+            background: #212121;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #2a2a2a;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: #B8B8B8;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 2px solid #141414;
+        }
+
+        th:first-child {
+            width: 50px;
+            text-align: center;
+        }
+
+        .toggle-panel-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-panel-btn:hover {
+            color: #B8B8B8;
+            transform: scale(1.2);
+        }
+
+        .toggle-panel-btn .material-symbols-outlined {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-panel.hidden {
+            display: none;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #2a2a2a;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        tbody tr:hover {
+            background: #2a2a2a;
+        }
+
+        tbody tr.active {
+            background: #3e3e3e;
+        }
+
+        td {
+            padding: 15px;
+            color: #9E9E9E;
+            font-size: 14px;
+        }
+
+        td:first-child {
+            text-align: center;
+            color: #B8B8B8;
+            font-weight: 600;
+        }
+
+        .rating-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-stars {
+            color: #ff9d00;
+            font-size: 16px;
+        }
+
+        .rating-value {
+            color: #B8B8B8;
+            font-weight: 600;
+        }
+
+        /* Превью карточка */
+        .preview-card {
+            position: sticky;
+            top: 20px;
+            width: 100%;
+            height: calc(100vh - 40px);
+            background: #212121;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .preview-card.show {
+            display: block;
+        }
+
+        .preview-placeholder.hide {
+            display: none;
+        }
+
+        .preview-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .preview-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-title {
+            color: #B8B8B8;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .preview-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .preview-stars {
+            color: #ff9d00;
+            font-size: 18px;
+        }
+
+        .preview-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .preview-info-label {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .preview-info-value {
+            color: #B8B8B8;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .preview-description {
+            margin-top: 15px;
+            color: #9E9E9E;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .preview-action {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            background: #3e3e3e;
+            border: none;
+            border-radius: 8px;
+            color: #B8B8B8;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preview-action:hover {
+            background: #4a4a4a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-hint {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Скроллбары */
+        .preview-card::-webkit-scrollbar,
+        .dropdown-content::-webkit-scrollbar,
+        .search-results::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .preview-card::-webkit-scrollbar-track,
+        .dropdown-content::-webkit-scrollbar-track,
+        .search-results::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+
+        .preview-card::-webkit-scrollbar-thumb,
+        .dropdown-content::-webkit-scrollbar-thumb,
+        .search-results::-webkit-scrollbar-thumb {
+            background: #3e3e3e;
+            border-radius: 4px;
+        }
+
+        .preview-card::-webkit-scrollbar-thumb:hover,
+        .dropdown-content::-webkit-scrollbar-thumb:hover,
+        .search-results::-webkit-scrollbar-thumb:hover {
+            background: #4a4a4a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="main-section">
+            <div class="header">
+                <button class="back-button" onclick="goBack()">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h1 id="pageTitle">Общий список</h1>
+            </div>
+
+            <!-- Панель фильтров -->
+            <div class="filter-panel">
+                <!-- Компактный заголовок -->
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <button class="back-button" onclick="goBack()" style="margin: 0;">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                    </button>
+                    <h2 id="pageTitle2" style="color: #B8B8B8; font-size: 18px; font-weight: 600; margin: 0;">Общий список</h2>
+                </div>
+                <!-- Компактные кнопки фильтров -->
+                <div class="filters-compact">
+                    <button class="hidden-filters-btn" id="toggleHiddenFilters">
+                        <span class="material-symbols-outlined">visibility_off</span>
+                        <span class="filter-badge" id="hiddenFiltersBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="filter-toggle" id="toggleRating">
+                        <span class="material-symbols-outlined">star</span>
+                        <span>Рейтинг</span>
+                    </button>
+                    <button class="filter-toggle" id="toggleYear">
+                        <span class="material-symbols-outlined">calendar_month</span>
+                        <span>Год</span>
+                    </button>
+                    <button class="filter-toggle" id="toggleCountry">
+                        <span class="material-symbols-outlined">public</span>
+                        <span>Страна</span>
+                        <span class="filter-badge" id="countryBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="filter-toggle" id="toggleDirector">
+                        <span class="material-symbols-outlined">person</span>
+                        <span>Режиссер</span>
+                    </button>
+                    <button class="filter-toggle" id="toggleGenre">
+                        <span class="material-symbols-outlined">movie</span>
+                        <span>Жанры</span>
+                        <span class="filter-badge" id="genreBadge" style="display: none;">0</span>
+                    </button>
+                    <button class="clear-filters-btn" onclick="clearAllFilters()">
+                        <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                </div>
+
+                <!-- Скрытые фильтры -->
+                <div class="hidden-filters-panel" id="hiddenFiltersPanel">
+                    <div class="hidden-filter-group">
+                        <span class="hidden-filter-label">Тип контента</span>
+                        <div class="hidden-filter-options">
+                            <div class="hidden-filter-option" data-type="movie">
+                                <div class="hidden-filter-checkbox"></div>
+                                <div class="hidden-filter-text">Фильм</div>
+                            </div>
+                            <div class="hidden-filter-option" data-type="series">
+                                <div class="hidden-filter-checkbox"></div>
+                                <div class="hidden-filter-text">Сериал</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden-filter-group">
+                        <span class="hidden-filter-label">Статус просмотра</span>
+                        <div class="hidden-filter-options">
+                            <div class="hidden-filter-option" data-status="watched">
+                                <div class="hidden-filter-checkbox"></div>
+                                <div class="hidden-filter-text">Просмотрено</div>
+                            </div>
+                            <div class="hidden-filter-option" data-status="watching">
+                                <div class="hidden-filter-checkbox"></div>
+                                <div class="hidden-filter-text">В процессе просмотра</div>
+                            </div>
+                            <div class="hidden-filter-option" data-status="notwatched">
+                                <div class="hidden-filter-checkbox"></div>
+                                <div class="hidden-filter-text">Не просмотрено</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden-filter-group">
+                        <span class="hidden-filter-label">Категория</span>
+                        <div class="hidden-filter-options" id="categoryFilterOptions">
+                            <!-- Будет заполнено из localStorage -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раскрывающаяся панель: Рейтинг -->
+                <div class="filter-expanded" id="ratingExpanded">
+                    <div class="filter-expanded-title">
+                        <span>Рейтинг</span>
+                        <span class="filter-close" onclick="closeFilter('rating')">×</span>
+                    </div>
+                    <div class="rating-sort">
+                        <button class="rating-sort-btn active" data-sort="desc">По убыванию</button>
+                        <button class="rating-sort-btn" data-sort="asc">По возрастанию</button>
+                    </div>
+                    <div class="stars-filter">
+                        <div class="stars-filter-label">Фильтр по количеству звёзд</div>
+                        <div class="stars-row">
+                            <button class="star-btn" data-stars="1">★</button>
+                            <button class="star-btn" data-stars="2">★</button>
+                            <button class="star-btn" data-stars="3">★</button>
+                            <button class="star-btn" data-stars="4">★</button>
+                            <button class="star-btn" data-stars="5">★</button>
+                            <button class="clear-stars">Сбросить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раскрывающаяся панель: Год -->
+                <div class="filter-expanded" id="yearExpanded">
+                    <div class="filter-expanded-title">
+                        <span>Год выпуска</span>
+                        <span class="filter-close" onclick="closeFilter('year')">×</span>
+                    </div>
+                    <div class="year-range-container">
+                        <div class="year-values">
+                            <span id="yearMinValue">1900</span>
+                            <span id="yearMaxValue">2025</span>
+                        </div>
+                        <div class="year-slider">
+                            <div class="year-slider-track" id="yearTrack"></div>
+                            <input type="range" id="yearMin" class="year-input" min="1900" max="2025" value="1900" step="1">
+                            <input type="range" id="yearMax" class="year-input" min="1900" max="2025" value="2025" step="1">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раскрывающаяся панель: Страна -->
+                <div class="filter-expanded" id="countryExpanded">
+                    <div class="filter-expanded-title">
+                        <span>Выбрать страны</span>
+                        <span class="filter-close" onclick="closeFilter('country')">×</span>
+                    </div>
+                    <div class="dropdown" id="countryDropdown">
+                        <div class="dropdown-trigger" id="countryTrigger">
+                            <span>Нажмите для выбора</span>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="dropdown-content" id="countryContent">
+                            <!-- Заполняется динамически -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раскрывающаяся панель: Режиссер -->
+                <div class="filter-expanded" id="directorExpanded">
+                    <div class="filter-expanded-title">
+                        <span>Поиск по режиссеру</span>
+                        <span class="filter-close" onclick="closeFilter('director')">×</span>
+                    </div>
+                    <div class="search-dropdown">
+                        <input type="text" class="search-input" id="directorSearch" placeholder="Начните вводить имя...">
+                        <div class="search-results" id="directorResults">
+                            <!-- Заполняется динамически -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Раскрывающаяся панель: Жанры -->
+                <div class="filter-expanded" id="genreExpanded">
+                    <div class="filter-expanded-title">
+                        <span>Выбрать жанры</span>
+                        <span class="filter-close" onclick="closeFilter('genre')">×</span>
+                    </div>
+                    <div class="dropdown" id="genreDropdown">
+                        <div class="dropdown-trigger" id="genreTrigger">
+                            <span>Нажмите для выбора</span>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="dropdown-content" id="genreContent">
+                            <!-- Заполняется динамически -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Таблица фильмов -->
+            <div class="table-container">
+                <table id="filmsTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button class="toggle-panel-btn" onclick="toggleFilterPanel()" title="Скрыть/показать панель фильтров">
+                                    <span class="material-symbols-outlined" id="togglePanelIcon">expand_less</span>
+                                </button>
+                            </th>
+                            <th>Название фильма</th>
+                            <th>Мой рейтинг</th>
+                            <th>Страна</th>
+                            <th>Год</th>
+                            <th>Режиссер</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filmsTableBody">
+                        <!-- Данные загружаются из API -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Правая колонка с placeholder и карточкой -->
+        <div>
+            <div class="preview-placeholder" id="previewPlaceholder">
+                Наведитесь на название фильма<br>для просмотра информации
+            </div>
+            <!-- Превью карточка -->
+    <div class="preview-card" id="previewCard">
+        <div class="preview-poster" id="previewPoster">
+            <img src="" alt="" id="previewPosterImg">
+        </div>
+        <div class="preview-title" id="previewTitle">Название фильма</div>
+        <div class="preview-rating">
+            <span class="preview-stars" id="previewStars">★★★★★</span>
+            <span class="rating-value" id="previewRatingValue">0/10</span>
+        </div>
+        <div class="preview-info">
+            <div class="preview-info-item">
+                <span class="preview-info-label">Год</span>
+                <span class="preview-info-value" id="previewYear">—</span>
+            </div>
+            <div class="preview-info-item">
+                <span class="preview-info-label">Страна</span>
+                <span class="preview-info-value" id="previewCountry">—</span>
+            </div>
+            <div class="preview-info-item">
+                <span class="preview-info-label">Режиссер</span>
+                <span class="preview-info-value" id="previewDirector">—</span>
+            </div>
+            <div class="preview-info-item">
+                <span class="preview-info-label">Актеры</span>
+                <span class="preview-info-value" id="previewCast">—</span>
+            </div>
+            <div class="preview-info-item">
+                <span class="preview-info-label">Жанры</span>
+                <span class="preview-info-value" id="previewGenres">—</span>
+            </div>
+        </div>
+        <div class="preview-description" id="previewDescription"></div>
+        <button class="preview-action" onclick="openFilm()">Открыть карточку</button>
+    </div>
+        </div>
+    </div>
+
+    <script>
+        let allFilms = [];
+        let filteredFilms = [];
+        let currentHoveredFilmId = null;
+        let hoverTimeout = null;
+
+        // Фильтры
+        let filters = {
+            ratingSort: 'desc',
+            starRating: null, // Фильтр по точному количеству звёзд
+            yearMin: 1900,
+            yearMax: 2025,
+            countries: [],
+            director: '',
+            genres: [],
+            contentTypes: [], // movie, series
+            watchStatus: [], // watched, notwatched
+            categories: [] // из index2.html
+        };
+
+        // Загрузка данных с сервера
+        async function loadFilms() {
+            // Проверяем наличие сохраненных фильтров при загрузке
+            const pendingFiltersCheck = localStorage.getItem('pendingFilters');
+            if (pendingFiltersCheck) {
+                console.log('📂 [list_sorting.html] Обнаружены сохраненные фильтры:', JSON.parse(pendingFiltersCheck));
+            } else {
+                console.log('📂 [list_sorting.html] Сохраненных фильтров нет');
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/films');
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки данных');
+                }
+                allFilms = await response.json();
+                
+                // Преобразуем данные к нужному формату
+                allFilms = allFilms.map(film => ({
+                    ...film,
+                    personalRating: film.rating || 0,
+                    yearNum: parseInt(film.year) || 0,
+                    genres: []
+                }));
+
+                // Собираем жанры из категорий
+                allFilms.forEach(film => {
+                    const genres = [];
+                    if (film.mainCategory) genres.push(film.mainCategory);
+                    if (film.subCategories && Array.isArray(film.subCategories)) {
+                        genres.push(...film.subCategories);
+                    }
+                    film.genres = genres;
+                });
+                
+                if (allFilms.length === 0) {
+                    showEmptyState();
+                } else {
+                    await initializeFilters();
+                    await applyPendingFilters(); // Применяем сохраненные фильтры (после загрузки категорий!)
+                    applyFilters();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки фильмов:', error);
+                showEmptyState();
+            }
+        }
+
+        // Инициализация фильтров
+        async function initializeFilters() {
+            // Определяем диапазон лет
+            const years = allFilms.map(f => f.yearNum).filter(y => y > 0);
+            if (years.length > 0) {
+                filters.yearMin = Math.min(...years);
+                filters.yearMax = Math.max(...years);
+                document.getElementById('yearMin').min = filters.yearMin;
+                document.getElementById('yearMin').max = filters.yearMax;
+                document.getElementById('yearMin').value = filters.yearMin;
+                document.getElementById('yearMax').min = filters.yearMin;
+                document.getElementById('yearMax').max = filters.yearMax;
+                document.getElementById('yearMax').value = filters.yearMax;
+                updateYearDisplay();
+            }
+
+            // Собираем уникальные страны
+            const countries = [...new Set(allFilms.map(f => f.country).filter(c => c))].sort();
+            const countryContent = document.getElementById('countryContent');
+            countryContent.innerHTML = countries.map(country => `
+                <div class="dropdown-item" data-value="${country}">
+                    <div class="dropdown-checkbox"></div>
+                    <div class="dropdown-item-label">${country}</div>
+                </div>
+            `).join('');
+
+            // Собираем уникальных режиссеров
+            const directors = [...new Set(allFilms.map(f => f.director).filter(d => d))].sort();
+            window.allDirectors = directors;
+
+            // Загружаем жанры/категории из API (categories.json)
+            await loadGenres();
+
+            // Загрузить категории из API для скрытых фильтров
+            await loadCategories();
+
+            setupEventListeners();
+        }
+
+        // Загрузка жанров из API (categories.json) - для кнопки "Жанры"
+        async function loadGenres() {
+            try {
+                const response = await fetch('http://localhost:3000/api/categories');
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки жанров');
+                }
+                const genres = await response.json();
+                const genreContent = document.getElementById('genreContent');
+                
+                if (genres.length === 0) {
+                    genreContent.innerHTML = '<div style="color: #666; padding: 8px; font-size: 12px;">Нет жанров</div>';
+                    return;
+                }
+                
+                // Сортируем жанры
+                genres.sort();
+                
+                genreContent.innerHTML = genres.map(genre => `
+                    <div class="dropdown-item" data-value="${genre}">
+                        <div class="dropdown-checkbox"></div>
+                        <div class="dropdown-item-label">${genre}</div>
+                    </div>
+                `).join('');
+
+                // Добавляем обработчики для элементов жанров
+                genreContent.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const value = this.dataset.value;
+                        const index = filters.genres.indexOf(value);
+                        
+                        if (index > -1) {
+                            filters.genres.splice(index, 1);
+                            this.classList.remove('selected');
+                            this.querySelector('.dropdown-checkbox').textContent = '';
+                        } else {
+                            filters.genres.push(value);
+                            this.classList.add('selected');
+                            this.querySelector('.dropdown-checkbox').textContent = '✓';
+                        }
+                        
+                        updateFilterBadges();
+                        applyFilters();
+                    });
+                });
+                
+                console.log('✓ Жанры загружены из categories.json:', genres);
+            } catch (error) {
+                console.error('Ошибка загрузки жанров:', error);
+                const genreContent = document.getElementById('genreContent');
+                genreContent.innerHTML = '<div style="color: #666; padding: 8px; font-size: 12px;">Ошибка загрузки</div>';
+            }
+        }
+
+        // Загрузка категорий из API (categories.json) - для скрытых фильтров
+        async function loadCategories() {
+            try {
+                const response = await fetch('http://localhost:3000/api/categories');
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки категорий');
+                }
+                const categories = await response.json();
+                const categoryOptions = document.getElementById('categoryFilterOptions');
+                
+                if (categories.length === 0) {
+                    categoryOptions.innerHTML = '<div style="color: #666; padding: 8px; font-size: 12px;">Нет категорий</div>';
+                    return;
+                }
+                
+                categoryOptions.innerHTML = categories.map(name => `
+                    <div class="hidden-filter-option" data-category="${name}">
+                        <div class="hidden-filter-checkbox"></div>
+                        <div class="hidden-filter-text">${name}</div>
+                    </div>
+                `).join('');
+
+                // Добавить обработчики для категорий
+                categoryOptions.querySelectorAll('.hidden-filter-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const category = this.dataset.category;
+                        const index = filters.categories.indexOf(category);
+                        
+                        if (index > -1) {
+                            filters.categories.splice(index, 1);
+                            this.classList.remove('selected');
+                            this.querySelector('.hidden-filter-checkbox').textContent = '';
+                        } else {
+                            filters.categories.push(category);
+                            this.classList.add('selected');
+                            this.querySelector('.hidden-filter-checkbox').textContent = '✓';
+                        }
+                        
+                        updatePageTitle(); // Обновляем заголовок при изменении категорий
+                        updateFilterBadges();
+                        applyFilters();
+                    });
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки категорий:', error);
+                const categoryOptions = document.getElementById('categoryFilterOptions');
+                categoryOptions.innerHTML = '<div style="color: #666; padding: 8px; font-size: 12px;">Ошибка загрузки</div>';
+            }
+        }
+
+        // Открытие/закрытие панелей фильтров
+        function toggleFilter(filterName) {
+            const expanded = document.getElementById(`${filterName}Expanded`);
+            const toggle = document.getElementById(`toggle${filterName.charAt(0).toUpperCase() + filterName.slice(1)}`);
+            
+            // Закрыть все другие панели
+            document.querySelectorAll('.filter-expanded').forEach(panel => {
+                if (panel.id !== `${filterName}Expanded`) {
+                    panel.classList.remove('show');
+                }
+            });
+            document.querySelectorAll('.filter-toggle').forEach(btn => {
+                if (btn.id !== `toggle${filterName.charAt(0).toUpperCase() + filterName.slice(1)}`) {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Переключить текущую панель
+            expanded.classList.toggle('show');
+            toggle.classList.toggle('active');
+        }
+
+        function closeFilter(filterName) {
+            const expanded = document.getElementById(`${filterName}Expanded`);
+            const toggle = document.getElementById(`toggle${filterName.charAt(0).toUpperCase() + filterName.slice(1)}`);
+            expanded.classList.remove('show');
+            toggle.classList.remove('active');
+        }
+
+        // Обновление заголовка страницы
+        function updatePageTitle() {
+            const pageTitle = document.getElementById('pageTitle');
+            const pageTitle2 = document.getElementById('pageTitle2');
+            
+            let titleText;
+            if (filters.categories.length === 1) {
+                // Если выбрана одна категория - показываем её название
+                titleText = filters.categories[0];
+            } else if (filters.categories.length > 1) {
+                // Если выбрано несколько категорий - показываем их через запятую
+                titleText = filters.categories.join(', ');
+            } else {
+                // Если категорий нет - показываем "Общий список"
+                titleText = 'Общий список';
+            }
+            
+            pageTitle.textContent = titleText;
+            pageTitle2.textContent = titleText;
+        }
+
+        // Обновление бейджей на кнопках
+        function updateFilterBadges() {
+            // Страны
+            const countryBadge = document.getElementById('countryBadge');
+            if (filters.countries.length > 0) {
+                countryBadge.textContent = filters.countries.length;
+                countryBadge.style.display = 'inline-block';
+            } else {
+                countryBadge.style.display = 'none';
+            }
+
+            // Жанры
+            const genreBadge = document.getElementById('genreBadge');
+            if (filters.genres.length > 0) {
+                genreBadge.textContent = filters.genres.length;
+                genreBadge.style.display = 'inline-block';
+            } else {
+                genreBadge.style.display = 'none';
+            }
+
+            // Скрытые фильтры (тип контента, статус просмотра, категории)
+            const hiddenFiltersBadge = document.getElementById('hiddenFiltersBadge');
+            const hiddenCount = filters.contentTypes.length + filters.watchStatus.length + filters.categories.length;
+            if (hiddenCount > 0) {
+                hiddenFiltersBadge.textContent = hiddenCount;
+                hiddenFiltersBadge.style.display = 'inline-block';
+            } else {
+                hiddenFiltersBadge.style.display = 'none';
+            }
+        }
+
+        // Настройка обработчиков
+        function setupEventListeners() {
+            // Кнопка скрытых фильтров
+            document.getElementById('toggleHiddenFilters').addEventListener('click', function() {
+                const panel = document.getElementById('hiddenFiltersPanel');
+                panel.classList.toggle('show');
+                this.classList.toggle('active');
+            });
+
+            // Скрытые фильтры: Тип контента
+            document.querySelectorAll('[data-type]').forEach(option => {
+                option.addEventListener('click', function() {
+                    const type = this.dataset.type;
+                    const index = filters.contentTypes.indexOf(type);
+                    
+                    if (index > -1) {
+                        filters.contentTypes.splice(index, 1);
+                        this.classList.remove('selected');
+                        this.querySelector('.hidden-filter-checkbox').textContent = '';
+                    } else {
+                        filters.contentTypes.push(type);
+                        this.classList.add('selected');
+                        this.querySelector('.hidden-filter-checkbox').textContent = '✓';
+                    }
+                    
+                    updateFilterBadges();
+                    applyFilters();
+                });
+            });
+
+            // Скрытые фильтры: Статус просмотра
+            document.querySelectorAll('[data-status]').forEach(option => {
+                option.addEventListener('click', function() {
+                    const status = this.dataset.status;
+                    const index = filters.watchStatus.indexOf(status);
+                    
+                    if (index > -1) {
+                        filters.watchStatus.splice(index, 1);
+                        this.classList.remove('selected');
+                        this.querySelector('.hidden-filter-checkbox').textContent = '';
+                    } else {
+                        filters.watchStatus.push(status);
+                        this.classList.add('selected');
+                        this.querySelector('.hidden-filter-checkbox').textContent = '✓';
+                    }
+                    
+                    updateFilterBadges();
+                    applyFilters();
+                });
+            });
+
+            // Обработчики для кнопок переключения фильтров
+            document.getElementById('toggleRating').addEventListener('click', () => toggleFilter('rating'));
+            document.getElementById('toggleYear').addEventListener('click', () => toggleFilter('year'));
+            document.getElementById('toggleCountry').addEventListener('click', () => toggleFilter('country'));
+            document.getElementById('toggleDirector').addEventListener('click', () => toggleFilter('director'));
+            document.getElementById('toggleGenre').addEventListener('click', () => toggleFilter('genre'));
+
+            // Фильтр по звездам
+            document.querySelectorAll('.star-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const stars = parseInt(this.dataset.stars);
+                    
+                    if (filters.starRating === stars) {
+                        // Снять выбор
+                        filters.starRating = null;
+                        document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('selected'));
+                    } else {
+                        // Выбрать звезду
+                        filters.starRating = stars;
+                        document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('selected'));
+                        
+                        // Подсветить выбранную и предыдущие
+                        document.querySelectorAll('.star-btn').forEach((b, index) => {
+                            if (index < stars) {
+                                b.classList.add('selected');
+                            }
+                        });
+                    }
+                    
+                    applyFilters();
+                });
+            });
+
+            // Кнопка сброса звезд
+            document.querySelector('.clear-stars').addEventListener('click', function() {
+                filters.starRating = null;
+                document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('selected'));
+                applyFilters();
+            });
+
+            // Сортировка по рейтингу
+            document.querySelectorAll('.rating-sort-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.rating-sort-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filters.ratingSort = this.dataset.sort;
+                    applyFilters();
+                });
+            });
+
+            // Год - range sliders
+            const yearMin = document.getElementById('yearMin');
+            const yearMax = document.getElementById('yearMax');
+            
+            yearMin.addEventListener('input', function() {
+                if (parseInt(this.value) > parseInt(yearMax.value)) {
+                    this.value = yearMax.value;
+                }
+                filters.yearMin = parseInt(this.value);
+                updateYearDisplay();
+                applyFilters();
+            });
+
+            yearMax.addEventListener('input', function() {
+                if (parseInt(this.value) < parseInt(yearMin.value)) {
+                    this.value = yearMin.value;
+                }
+                filters.yearMax = parseInt(this.value);
+                updateYearDisplay();
+                applyFilters();
+            });
+
+            // Страны dropdown
+            const countryTrigger = document.getElementById('countryTrigger');
+            const countryContent = document.getElementById('countryContent');
+            
+            countryTrigger.addEventListener('click', () => {
+                countryContent.classList.toggle('show');
+                countryTrigger.classList.toggle('active');
+            });
+
+            countryContent.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const value = this.dataset.value;
+                    const index = filters.countries.indexOf(value);
+                    
+                    if (index > -1) {
+                        filters.countries.splice(index, 1);
+                        this.classList.remove('selected');
+                        this.querySelector('.dropdown-checkbox').textContent = '';
+                    } else {
+                        filters.countries.push(value);
+                        this.classList.add('selected');
+                        this.querySelector('.dropdown-checkbox').textContent = '✓';
+                    }
+                    
+                    updateFilterBadges();
+                    applyFilters();
+                });
+            });
+
+            // Жанры dropdown - обработчик открытия/закрытия
+            const genreTrigger = document.getElementById('genreTrigger');
+            const genreContent = document.getElementById('genreContent');
+            
+            genreTrigger.addEventListener('click', () => {
+                genreContent.classList.toggle('show');
+                genreTrigger.classList.toggle('active');
+            });
+            
+            // Обработчики для элементов жанров добавляются в loadGenres()
+
+            // Поиск режиссера
+            const directorSearch = document.getElementById('directorSearch');
+            const directorResults = document.getElementById('directorResults');
+            
+            directorSearch.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query.length === 0) {
+                    directorResults.classList.remove('show');
+                    return;
+                }
+
+                const matches = window.allDirectors.filter(d => 
+                    d.toLowerCase().includes(query)
+                ).slice(0, 10);
+
+                if (matches.length > 0) {
+                    directorResults.innerHTML = matches.map(director => {
+                        const isSelected = filters.director === director;
+                        return `<div class="search-result-item ${isSelected ? 'selected' : ''}" data-value="${director}">${director}</div>`;
+                    }).join('');
+                    directorResults.classList.add('show');
+
+                    directorResults.querySelectorAll('.search-result-item').forEach(item => {
+                        item.addEventListener('click', function() {
+                            const value = this.dataset.value;
+                            if (filters.director === value) {
+                                filters.director = '';
+                                directorSearch.value = '';
+                            } else {
+                                filters.director = value;
+                                directorSearch.value = value;
+                            }
+                            directorResults.classList.remove('show');
+                            applyFilters();
+                        });
+                    });
+                } else {
+                    directorResults.classList.remove('show');
+                }
+            });
+
+            directorSearch.addEventListener('focus', function() {
+                if (this.value.trim().length > 0) {
+                    directorResults.classList.add('show');
+                }
+            });
+
+            // Закрытие выпадающих списков при клике вне
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#countryDropdown')) {
+                    countryContent.classList.remove('show');
+                    countryTrigger.classList.remove('active');
+                }
+                if (!e.target.closest('#genreDropdown')) {
+                    genreContent.classList.remove('show');
+                    genreTrigger.classList.remove('active');
+                }
+                if (!e.target.closest('.search-dropdown')) {
+                    directorResults.classList.remove('show');
+                }
+            });
+        }
+
+        // Обновление отображения диапазона лет
+        function updateYearDisplay() {
+            document.getElementById('yearMinValue').textContent = filters.yearMin;
+            document.getElementById('yearMaxValue').textContent = filters.yearMax;
+            
+            const min = parseInt(document.getElementById('yearMin').min);
+            const max = parseInt(document.getElementById('yearMin').max);
+            const percentMin = ((filters.yearMin - min) / (max - min)) * 100;
+            const percentMax = ((filters.yearMax - min) / (max - min)) * 100;
+            
+            const track = document.getElementById('yearTrack');
+            track.style.left = percentMin + '%';
+            track.style.width = (percentMax - percentMin) + '%';
+        }
+
+        // Применение фильтров
+        function applyFilters() {
+            filteredFilms = allFilms.filter(film => {
+                // Фильтр по звездам (точное соответствие)
+                if (filters.starRating !== null) {
+                    const filmStars = Math.round(film.personalRating / 2);
+                    if (filmStars !== filters.starRating) {
+                        return false;
+                    }
+                }
+
+                // Фильтр по году
+                if (film.yearNum < filters.yearMin || film.yearNum > filters.yearMax) {
+                    return false;
+                }
+
+                // Фильтр по стране
+                if (filters.countries.length > 0 && !filters.countries.includes(film.country)) {
+                    return false;
+                }
+
+                // Фильтр по режиссеру
+                if (filters.director && film.director !== filters.director) {
+                    return false;
+                }
+
+                // Фильтр по жанрам
+                if (filters.genres.length > 0) {
+                    const hasGenre = filters.genres.some(genre => film.genres.includes(genre));
+                    if (!hasGenre) return false;
+                }
+
+                // Фильтр по типу контента
+                if (filters.contentTypes.length > 0) {
+                    const filmType = film.contentType === 'series' ? 'series' : 'movie';
+                    if (!filters.contentTypes.includes(filmType)) {
+                        return false;
+                    }
+                }
+
+                // Фильтр по статусу просмотра
+                if (filters.watchStatus.length > 0) {
+                    // TODO: нужно добавить поле watchStatus в данные фильма
+                    // Пока пропускаем этот фильтр
+                }
+
+                // Фильтр по категории
+                if (filters.categories.length > 0) {
+                    const hasCategory = filters.categories.some(cat => 
+                        film.mainCategory === cat || (film.subCategories && film.subCategories.includes(cat))
+                    );
+                    if (!hasCategory) return false;
+                }
+
+                return true;
+            });
+
+            // Сортировка по рейтингу
+            filteredFilms.sort((a, b) => {
+                if (filters.ratingSort === 'desc') {
+                    return b.personalRating - a.personalRating;
+                } else {
+                    return a.personalRating - b.personalRating;
+                }
+            });
+
+            renderTable();
+        }
+
+        // Сброс всех фильтров
+        function clearAllFilters() {
+            // Сброс значений
+            filters.ratingSort = 'desc';
+            filters.starRating = null;
+            filters.yearMin = parseInt(document.getElementById('yearMin').min);
+            filters.yearMax = parseInt(document.getElementById('yearMin').max);
+            filters.countries = [];
+            filters.director = '';
+            filters.genres = [];
+            filters.contentTypes = [];
+            filters.watchStatus = [];
+            filters.categories = [];
+
+            // Сброс UI
+            document.querySelectorAll('.rating-sort-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.rating-sort-btn[data-sort="desc"]').forEach(b => b.classList.add('active'));
+            
+            // Сброс звезд
+            document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('selected'));
+            
+            document.getElementById('yearMin').value = filters.yearMin;
+            document.getElementById('yearMax').value = filters.yearMax;
+            updateYearDisplay();
+
+            document.querySelectorAll('.dropdown-item.selected').forEach(item => {
+                item.classList.remove('selected');
+                item.querySelector('.dropdown-checkbox').textContent = '';
+            });
+
+            // Сброс скрытых фильтров
+            document.querySelectorAll('.hidden-filter-option.selected').forEach(item => {
+                item.classList.remove('selected');
+                item.querySelector('.hidden-filter-checkbox').textContent = '';
+            });
+
+            document.getElementById('directorSearch').value = '';
+
+            // Закрыть все панели фильтров
+            document.querySelectorAll('.filter-expanded').forEach(panel => {
+                panel.classList.remove('show');
+            });
+            document.querySelectorAll('.filter-toggle').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Закрыть скрытые фильтры
+            document.getElementById('hiddenFiltersPanel').classList.remove('show');
+            document.getElementById('toggleHiddenFilters').classList.remove('active');
+
+            updatePageTitle(); // Обновляем заголовок при сбросе фильтров
+            updateFilterBadges();
+            applyFilters();
+        }
+
+        // Обновление бейджей и заголовка при инициализации
+        updatePageTitle();
+        updateFilterBadges();
+
+        // Отображение пустого состояния
+        function showEmptyState() {
+            const tbody = document.getElementById('filmsTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        <div class="material-symbols-outlined">movie</div>
+                        <div class="empty-state-text">Фильмов пока нет</div>
+                        <div class="empty-state-hint">Добавьте первый фильм на странице редактирования</div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Отрисовка таблицы
+        function renderTable() {
+            const tbody = document.getElementById('filmsTableBody');
+            
+            if (filteredFilms.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="material-symbols-outlined">search_off</div>
+                            <div class="empty-state-text">Ничего не найдено</div>
+                            <div class="empty-state-hint">Попробуйте изменить фильтры</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+
+            filteredFilms.forEach((film, index) => {
+                const tr = document.createElement('tr');
+                tr.dataset.filmId = film.id;
+                
+                // Номер
+                const tdNum = document.createElement('td');
+                tdNum.textContent = index + 1;
+                tr.appendChild(tdNum);
+
+                // Название
+                const tdTitle = document.createElement('td');
+                tdTitle.textContent = film.title || '—';
+                tr.appendChild(tdTitle);
+
+                // Рейтинг
+                const tdRating = document.createElement('td');
+                const ratingDiv = document.createElement('div');
+                ratingDiv.className = 'rating-cell';
+                const rating = film.personalRating || 0;
+                const fullStars = Math.floor(rating / 2);
+                const halfStar = rating % 2 !== 0;
+                let starsHtml = '★'.repeat(fullStars);
+                if (halfStar) starsHtml += '☆';
+                starsHtml += '☆'.repeat(5 - fullStars - (halfStar ? 1 : 0));
+                ratingDiv.innerHTML = `
+                    <span class="rating-stars">${starsHtml}</span>
+                    <span class="rating-value">${rating}/10</span>
+                `;
+                tdRating.appendChild(ratingDiv);
+                tr.appendChild(tdRating);
+
+                // Страна
+                const tdCountry = document.createElement('td');
+                tdCountry.textContent = film.country || '—';
+                tr.appendChild(tdCountry);
+
+                // Год
+                const tdYear = document.createElement('td');
+                tdYear.textContent = film.year || '—';
+                tr.appendChild(tdYear);
+
+                // Режиссер
+                const tdDirector = document.createElement('td');
+                tdDirector.textContent = film.director || '—';
+                tr.appendChild(tdDirector);
+
+                // События наведения
+                tr.addEventListener('mouseenter', () => handleRowHover(film, tr));
+                tr.addEventListener('mouseleave', handleRowLeave);
+                tr.addEventListener('click', () => openFilmById(film.id));
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Обработка наведения на строку
+        function handleRowHover(film, row) {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+                showPreview(film);
+                document.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('active'));
+                row.classList.add('active');
+            }, 300);
+        }
+
+        function handleRowLeave() {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+                hidePreview();
+                document.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('active'));
+            }, 200);
+        }
+
+        // Показать превью
+        function showPreview(film) {
+            currentHoveredFilmId = film.id;
+            const card = document.getElementById('previewCard');
+            const placeholder = document.getElementById('previewPlaceholder');
+            
+            // Скрыть placeholder, показать карточку
+            placeholder.classList.add('hide');
+            
+            // Постер
+            const posterImg = document.getElementById('previewPosterImg');
+            if (film.bannerUrl) {
+                const imagePath = film.bannerUrl.replace(/\\/g, '/');
+                posterImg.src = `http://localhost:3000/${imagePath}`;
+                posterImg.style.display = 'block';
+            } else {
+                posterImg.style.display = 'none';
+            }
+
+            // Название
+            document.getElementById('previewTitle').textContent = film.title || 'Без названия';
+
+            // Рейтинг
+            const rating = film.personalRating || 0;
+            const fullStars = Math.floor(rating / 2);
+            const halfStar = rating % 2 !== 0;
+            let starsHtml = '★'.repeat(fullStars);
+            if (halfStar) starsHtml += '☆';
+            starsHtml += '☆'.repeat(5 - fullStars - (halfStar ? 1 : 0));
+            document.getElementById('previewStars').textContent = starsHtml;
+            document.getElementById('previewRatingValue').textContent = `${rating}/10`;
+
+            // Информация
+            document.getElementById('previewYear').textContent = film.year || '—';
+            document.getElementById('previewCountry').textContent = film.country || '—';
+            document.getElementById('previewDirector').textContent = film.director || '—';
+            
+            // Актерский состав
+            const cast = film.cast || '';
+            const castArray = cast.split(',').map(s => s.trim()).filter(s => s);
+            const castPreview = castArray.length > 3 
+                ? castArray.slice(0, 3).join(', ') + '...' 
+                : cast || '—';
+            document.getElementById('previewCast').textContent = castPreview;
+            
+            const genres = film.genres || [];
+            document.getElementById('previewGenres').textContent = genres.length > 0 ? genres.join(', ') : '—';
+
+            // Описание
+            const description = film.filmDescription || film.description || 'Описание отсутствует';
+            document.getElementById('previewDescription').textContent = 
+                description.length > 200 ? description.substring(0, 200) + '...' : description;
+
+            card.classList.add('show');
+        }
+
+        function hidePreview() {
+            const card = document.getElementById('previewCard');
+            const placeholder = document.getElementById('previewPlaceholder');
+            
+            card.classList.remove('show');
+            placeholder.classList.remove('hide');
+            currentHoveredFilmId = null;
+        }
+
+        // Держать карточку открытой при наведении на неё
+        document.getElementById('previewCard').addEventListener('mouseenter', () => {
+            clearTimeout(hoverTimeout);
+        });
+
+        document.getElementById('previewCard').addEventListener('mouseleave', () => {
+            hidePreview();
+        });
+
+        // Открыть карточку фильма
+        function openFilm() {
+            if (currentHoveredFilmId) {
+                openFilmById(currentHoveredFilmId);
+            }
+        }
+
+        function openFilmById(filmId) {
+            window.location.href = `edit-film.html?id=${filmId}`;
+        }
+
+        // Кнопка назад
+        function goBack() {
+            window.location.href = 'index2.html';
+        }
+
+        // Скрыть/показать панель фильтров
+        function toggleFilterPanel() {
+            const filterPanel = document.querySelector('.filter-panel');
+            const icon = document.getElementById('togglePanelIcon');
+            
+            filterPanel.classList.toggle('hidden');
+            
+            // Меняем иконку
+            if (filterPanel.classList.contains('hidden')) {
+                icon.textContent = 'expand_more'; // Стрелка вниз (показать панель)
+            } else {
+                icon.textContent = 'expand_less'; // Стрелка вверх (скрыть панель)
+            }
+        }
+
+        // Применение сохраненных фильтров из предыдущих страниц
+        async function applyPendingFilters() {
+            const pendingFiltersStr = localStorage.getItem('pendingFilters');
+            if (!pendingFiltersStr) return;
+            
+            try {
+                const pendingFilters = JSON.parse(pendingFiltersStr);
+                
+                // Проверяем, что фильтры не старше 5 минут
+                if (pendingFilters.timestamp && (Date.now() - pendingFilters.timestamp) > 300000) {
+                    localStorage.removeItem('pendingFilters');
+                    return;
+                }
+                
+                console.log('🔄 Применение сохраненных фильтров:', pendingFilters);
+                
+                // Небольшая задержка, чтобы убедиться что DOM загружен
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Применяем тип контента (movie/series)
+                if (pendingFilters.contentType) {
+                    const contentType = pendingFilters.contentType;
+                    filters.contentTypes.push(contentType);
+                    
+                    // Активируем UI элемент
+                    const typeOption = document.querySelector(`[data-type="${contentType}"]`);
+                    if (typeOption) {
+                        typeOption.classList.add('selected');
+                        typeOption.querySelector('.hidden-filter-checkbox').textContent = '✓';
+                        console.log('✓ Применен тип контента:', contentType);
+                    } else {
+                        console.warn('⚠️ Не найден элемент для типа контента:', contentType);
+                    }
+                }
+                
+                // Применяем статус просмотра (watched/watching/notwatched)
+                if (pendingFilters.watchStatus) {
+                    const watchStatus = pendingFilters.watchStatus;
+                    filters.watchStatus.push(watchStatus);
+                    
+                    // Активируем UI элемент
+                    const statusOption = document.querySelector(`[data-status="${watchStatus}"]`);
+                    if (statusOption) {
+                        statusOption.classList.add('selected');
+                        statusOption.querySelector('.hidden-filter-checkbox').textContent = '✓';
+                        console.log('✓ Применен статус просмотра:', watchStatus);
+                    } else {
+                        console.warn('⚠️ Не найден элемент для статуса:', watchStatus);
+                    }
+                }
+                
+                // Применяем категорию
+                if (pendingFilters.category) {
+                    const category = pendingFilters.category;
+                    filters.categories.push(category);
+                    
+                    // Активируем UI элемент
+                    const categoryOption = document.querySelector(`[data-category="${category}"]`);
+                    if (categoryOption) {
+                        categoryOption.classList.add('selected');
+                        categoryOption.querySelector('.hidden-filter-checkbox').textContent = '✓';
+                        console.log('✓ Применена категория:', category);
+                    } else {
+                        console.warn('⚠️ Не найден элемент для категории:', category);
+                    }
+                }
+                
+                // НЕ открываем панель автоматически, только применяем фильтры
+                // Пользователь может открыть панель вручную, чтобы увидеть какие фильтры применены
+                console.log('✓ Панель скрытых фильтров не открыта (фильтры применены в фоне)');
+                
+                // Обновляем бейджи и заголовок
+                updatePageTitle();
+                updateFilterBadges();
+                
+                console.log('✅ Фильтры успешно применены');
+                
+                // Очищаем сохраненные фильтры после применения
+                localStorage.removeItem('pendingFilters');
+                
+            } catch (error) {
+                console.error('❌ Ошибка применения сохраненных фильтров:', error);
+                localStorage.removeItem('pendingFilters');
+            }
+        }
+
+        // Инициализация
+        loadFilms();
+    </script>
+</body>
+</html>

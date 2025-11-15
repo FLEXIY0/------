@@ -215,9 +215,9 @@
         <div class="tile">
             Сериалы
             <div class="submenu submenu-right">
-                <a href="index2.html">Просмотренные</a>
-                <a href="index2.html">В процессе просмотра</a>
-                <a href="index2.html">Не просмотренные</a>
+                <a href="#" onclick="navigateWithFilters('series', 'watched')">Просмотренные</a>
+                <a href="#" onclick="navigateWithFilters('series', 'watching')">В процессе просмотра</a>
+                <a href="#" onclick="navigateWithFilters('series', 'notwatched')">Не просмотренные</a>
             </div>
         </div>
 
@@ -225,8 +225,8 @@
         <div class="tile">
             Фильмы
             <div class="submenu submenu-left">
-                <a href="index2.html">Просмотренные</a>
-                <a href="index2.html">Не просмотренные</a>
+                <a href="#" onclick="navigateWithFilters('movie', 'watched')">Просмотренные</a>
+                <a href="#" onclick="navigateWithFilters('movie', 'notwatched')">Не просмотренные</a>
             </div>
         </div>
     </div>
@@ -239,6 +239,23 @@
         function createNewFilm() {
             // Перенаправление на страницу создания новой карточки
             window.location.href = 'edit-film.html';
+        }
+
+        function navigateWithFilters(contentType, watchStatus) {
+            // Сохраняем выбранные фильтры в localStorage
+            const filterSelection = {
+                contentType: contentType,  // 'movie' или 'series'
+                watchStatus: watchStatus,   // 'watched', 'watching', 'notwatched'
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('pendingFilters', JSON.stringify(filterSelection));
+            console.log('💾 [index1.html] Сохранены фильтры:', filterSelection);
+            
+            // Переходим на страницу выбора категорий
+            window.location.href = 'index2.html';
+            
+            return false;
         }
     </script>
 </body>

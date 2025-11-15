@@ -58,29 +58,6 @@
             transform: scale(1.05);
         }
 
-        .tile:last-child {
-            background: #212121;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .tile:last-child::before {
-            content: '•••';
-            font-size: 30px;
-            font-weight: 400;
-            color: #9E9E9E;
-            line-height: 1;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 10%;
-        }
-
-        .tile:last-child:hover {
-            background: #323232;
-        }
 
         .tile-label {
             position: absolute;
@@ -102,6 +79,20 @@
         .tile:hover .tile-label {
             opacity: 1;
             visibility: visible;
+        }
+
+        /* Три точки для плитки меню */
+        .tile:last-child::before {
+            content: '•••';
+            font-size: 30px;
+            font-weight: 400;
+            color: #9E9E9E;
+            line-height: 1;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10%;
         }
 
         .sidebar {
@@ -172,39 +163,111 @@
             opacity: 1;
         }
 
-        .add-btn {
-            width: 40px;
-            height: 40px;
-            background: #3e3e3e;
-            color: #9E9E9E;
-            border-radius: 6px;
+        /* Кнопка добавления в сайдбаре */
+        .add-btn-container {
+            padding: 0 15px 15px 15px;
+            position: relative;
+        }
+
+        .sidebar-add-btn {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 2px solid #3e3e3e;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 24px;
-            font-weight: 400;
-            transition: background 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .add-btn:hover {
-            background: #323232;
+        .sidebar-add-btn::before {
+            content: '+';
+            font-size: 32px;
+            font-weight: 300;
+            color: #666;
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        .sidebar-add-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 157, 0, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-add-btn:hover {
+            background: linear-gradient(135deg, #3e3e3e 0%, #2a2a2a 100%);
+            border-color: #ff9d00;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 157, 0, 0.25);
+        }
+
+        .sidebar-add-btn:hover::before {
+            color: #ff9d00;
+            transform: rotate(90deg) scale(1.1);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .sidebar-add-btn:hover::after {
+            opacity: 1;
+            transform: scale(1);
+            animation: ripple 1.5s ease-out infinite;
+        }
+
+        .sidebar-add-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: rotate(90deg) scale(1.1);
+            }
+            50% {
+                transform: rotate(90deg) scale(1.2);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Модальное окно подтверждения удаления */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 20;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modal.active {
@@ -213,63 +276,94 @@
         }
 
         .modal-content {
-            background: #212121;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
+            background: #1a1a1a;
+            border: 1px solid #3e3e3e;
+            padding: 30px;
+            border-radius: 16px;
+            width: 350px;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
         }
 
         .modal-title {
-            font-size: 18px;
+            font-size: 15px;
+            font-weight: 400;
             color: #9E9E9E;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            letter-spacing: 0.3px;
         }
 
         .error-message {
-            color: #9E9E9E;
-            font-size: 14px;
-            margin-top: 5px;
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 400;
         }
 
         .modal-buttons {
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         .modal-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            font-weight: 400;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        .confirm-btn {
-            background: #3e3e3e;
+        .modal-buttons .confirm-btn {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: #fff;
+            border: none;
+        }
+
+        .modal-buttons .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 68, 68, 0.4);
+        }
+
+        .modal-buttons .cancel-btn {
+            background: transparent;
             color: #9E9E9E;
+            border: 2px solid #3e3e3e;
         }
 
-        .cancel-btn {
-            background: #323232;
-            color: #9E9E9E;
+        .modal-buttons .cancel-btn:hover {
+            border-color: #555;
+            background: #2a2a2a;
         }
 
+        /* Минималистичное модальное окно */
         .input-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 20;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input-modal.active {
@@ -278,32 +372,87 @@
         }
 
         .input-modal-content {
-            background: #212121;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
+            background: #1a1a1a;
+            border: 1px solid #3e3e3e;
+            padding: 30px;
+            border-radius: 16px;
+            width: 350px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-modal.active .input-modal-content {
+            transform: scale(1);
         }
 
         .input-modal-title {
-            font-size: 18px;
+            font-size: 16px;
+            font-weight: 400;
             color: #9E9E9E;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 0.5px;
         }
 
         .input-field {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #323232;
-            background: #3e3e3e;
-            color: #9E9E9E;
-            border-radius: 4px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border: 2px solid #2a2a2a;
+            background: #0f0f0f;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #ff9d00;
+            background: #141414;
+        }
+
+        .input-field::placeholder {
+            color: #555;
         }
 
         .input-modal-buttons {
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .input-modal-buttons .modal-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .input-modal-buttons .confirm-btn {
+            background: linear-gradient(135deg, #ff9d00 0%, #ff8800 100%);
+            color: #000;
+            border: none;
+        }
+
+        .input-modal-buttons .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 157, 0, 0.4);
+        }
+
+        .input-modal-buttons .cancel-btn {
+            background: transparent;
+            color: #9E9E9E;
+            border: 2px solid #3e3e3e;
+        }
+
+        .input-modal-buttons .cancel-btn:hover {
+            border-color: #555;
+            background: #2a2a2a;
         }
 
         @media (max-width: 768px) {
@@ -340,7 +489,9 @@
         <div class="tile" id="tile5">
             <div class="tile-label">Категория 5</div>
         </div>
-        <div class="tile" id="menuButton"></div>
+        <div class="tile" id="menuButton">
+            <div class="tile-label">Меню</div>
+        </div>
     </div>
 
     <div class="sidebar" id="sidebar">
@@ -348,7 +499,9 @@
         <ul class="sidebar-menu" id="categoryList">
             <!-- Категории будут добавлены динамически -->
         </ul>
-        <div class="add-btn" id="addCategoryBtn">+</div>
+        <div class="add-btn-container">
+            <div class="sidebar-add-btn" id="sidebarAddBtn"></div>
+        </div>
     </div>
 
     <div class="modal" id="confirmModal">
@@ -363,63 +516,110 @@
 
     <div class="input-modal" id="inputModal">
         <div class="input-modal-content">
-            <div class="input-modal-title">Добавить новую категорию</div>
-            <input type="text" class="input-field" id="newCategoryInput" placeholder="Введите название категории">
+            <div class="input-modal-title">Новая категория</div>
+            <input type="text" class="input-field" id="newCategoryInput" placeholder="Введите название" autocomplete="off">
             <div id="error-message" class="error-message" style="display: none;"></div>
             <div class="input-modal-buttons">
                 <button class="modal-btn cancel-btn" id="cancelAdd">Отмена</button>
-                <button class="modal-btn confirm-btn" id="confirmAdd">Добавить</button>
+                <button class="modal-btn confirm-btn" id="confirmAdd">Создать</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Класс для работы с локальным хранилищем
+        // Класс для работы с категориями через API
         class CategoryStorage {
             constructor() {
-                this.storageKey = 'movieCategories';
+                this.apiUrl = 'http://localhost:3000/api/categories';
+                this.usageKey = 'categoryUsageCount'; // Для отслеживания частоты использования
             }
 
-            // Получить все категории
-            getAll() {
-                const categories = localStorage.getItem(this.storageKey);
-                return categories ? JSON.parse(categories) : [];
+            // Получить все категории с сервера
+            async getAll() {
+                try {
+                    const response = await fetch(this.apiUrl);
+                    if (!response.ok) {
+                        throw new Error('Ошибка загрузки категорий');
+                    }
+                    const categories = await response.json();
+                    
+                    // Преобразуем в объекты с дополнительными данными
+                    const usageCounts = this.getUsageCounts();
+                    return categories.map(name => ({
+                        name: name,
+                        usageCount: usageCounts[name] || 0
+                    })).sort((a, b) => b.usageCount - a.usageCount); // Сортируем по частоте использования
+                } catch (error) {
+                    console.error('Ошибка загрузки категорий:', error);
+                    return [];
+                }
             }
 
-            // Проверить, существует ли категория с таким именем
-            exists(categoryName) {
-                const categories = this.getAll();
-                return categories.some(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
+            // Получить счетчики использования из localStorage
+            getUsageCounts() {
+                const counts = localStorage.getItem(this.usageKey);
+                return counts ? JSON.parse(counts) : {};
+            }
+
+            // Сохранить счетчики использования
+            saveUsageCounts(counts) {
+                localStorage.setItem(this.usageKey, JSON.stringify(counts));
+            }
+
+            // Увеличить счетчик использования категории
+            incrementUsage(categoryName) {
+                const counts = this.getUsageCounts();
+                counts[categoryName] = (counts[categoryName] || 0) + 1;
+                this.saveUsageCounts(counts);
             }
 
             // Добавить новую категорию
-            add(categoryName) {
-                if (this.exists(categoryName)) {
-                    return { success: false, message: 'Категория с таким названием уже существует!' };
+            async add(categoryName) {
+                try {
+                    const response = await fetch(this.apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: categoryName })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        return { success: false, message: data.error || 'Ошибка при добавлении категории' };
+                    }
+                    
+                    return { success: true, category: { name: categoryName } };
+                } catch (error) {
+                    console.error('Ошибка добавления категории:', error);
+                    return { success: false, message: 'Ошибка соединения с сервером' };
                 }
-                
-                const categories = this.getAll();
-                const newCategory = {
-                    id: Date.now(),
-                    name: categoryName,
-                    createdAt: new Date().toISOString()
-                };
-                categories.push(newCategory);
-                this.save(categories);
-                return { success: true, category: newCategory };
             }
 
             // Удалить категорию
-            remove(id) {
-                const categories = this.getAll();
-                const updatedCategories = categories.filter(cat => cat.id !== id);
-                this.save(updatedCategories);
-                return updatedCategories;
-            }
-
-            // Сохранить категории
-            save(categories) {
-                localStorage.setItem(this.storageKey, JSON.stringify(categories));
+            async remove(categoryName) {
+                try {
+                    const response = await fetch(`${this.apiUrl}/${encodeURIComponent(categoryName)}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Ошибка удаления категории');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Удаляем из счетчиков использования
+                    const counts = this.getUsageCounts();
+                    delete counts[categoryName];
+                    this.saveUsageCounts(counts);
+                    
+                    return data.categories;
+                } catch (error) {
+                    console.error('Ошибка удаления категории:', error);
+                    return [];
+                }
             }
         }
 
@@ -427,7 +627,7 @@
         const menuButton = document.getElementById('menuButton');
         const sidebar = document.getElementById('sidebar');
         const categoryList = document.getElementById('categoryList');
-        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const sidebarAddBtn = document.getElementById('sidebarAddBtn');
         const confirmModal = document.getElementById('confirmModal');
         const inputModal = document.getElementById('inputModal');
         const cancelDelete = document.getElementById('cancelDelete');
@@ -448,17 +648,33 @@
 
         // Инициализация хранилища
         const storage = new CategoryStorage();
-        let currentCategoryIdToDelete = null;
+        let currentCategoryToDelete = null;
 
         // Функция отображения категорий
-        function renderCategories() {
+        async function renderCategories() {
+            categoryList.innerHTML = '<li style="color: #666; padding: 10px;">Загрузка...</li>';
+            const categories = await storage.getAll();
+            
             categoryList.innerHTML = '';
-            const categories = storage.getAll();
+            
+            if (categories.length === 0) {
+                categoryList.innerHTML = '<li style="color: #666; padding: 10px;">Нет категорий</li>';
+                updateTiles([]);
+                return;
+            }
             
             categories.forEach(category => {
                 const li = document.createElement('li');
-                li.setAttribute('data-id', category.id);
+                li.setAttribute('data-name', category.name);
                 li.innerHTML = `${category.name} <button class="delete-btn">×</button>`;
+                
+                // Добавляем обработчик клика на категорию (не на кнопку удаления)
+                li.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('delete-btn')) {
+                        selectCategoryAndNavigate(category.name);
+                    }
+                });
+                
                 categoryList.appendChild(li);
             });
             
@@ -482,10 +698,16 @@
                     label.textContent = category.name;
                     // Добавляем класс для визуального различия
                     tile.classList.add('has-category');
+                    
+                    // Удаляем старые обработчики и добавляем новый
+                    tile.onclick = function() {
+                        selectCategoryAndNavigate(category.name);
+                    };
                 } else {
                     // Нет категории для этой плитки
                     label.textContent = `Плитка ${i + 1}`;
                     tile.classList.remove('has-category');
+                    tile.onclick = null;
                 }
             }
         }
@@ -495,8 +717,8 @@
             sidebar.classList.toggle('active');
         });
 
-        // Обработчик клика по кнопке добавления категории
-        addCategoryBtn.addEventListener('click', function() {
+        // Обработчик клика по кнопке добавления категории в сайдбаре
+        sidebarAddBtn.addEventListener('click', function() {
             inputModal.classList.add('active');
             newCategoryInput.focus();
             errorMessage.style.display = 'none';
@@ -510,12 +732,21 @@
         });
 
         // Обработчик клика по кнопке подтверждения добавления
-        confirmAdd.addEventListener('click', function() {
+        confirmAdd.addEventListener('click', async function() {
             const categoryName = newCategoryInput.value.trim();
             if (categoryName) {
-                const result = storage.add(categoryName);
+                // Показываем процесс загрузки
+                confirmAdd.disabled = true;
+                confirmAdd.textContent = 'Добавление...';
+                
+                const result = await storage.add(categoryName);
+                
+                // Возвращаем кнопку в исходное состояние
+                confirmAdd.disabled = false;
+                confirmAdd.textContent = 'Добавить';
+                
                 if (result.success) {
-                    renderCategories();
+                    await renderCategories();
                     inputModal.classList.remove('active');
                     newCategoryInput.value = '';
                     errorMessage.style.display = 'none';
@@ -530,8 +761,8 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('delete-btn')) {
                 e.stopPropagation();
-                const categoryId = parseInt(e.target.parentElement.getAttribute('data-id'));
-                currentCategoryIdToDelete = categoryId;
+                const categoryName = e.target.parentElement.getAttribute('data-name');
+                currentCategoryToDelete = categoryName;
                 confirmModal.classList.add('active');
             }
         });
@@ -539,16 +770,25 @@
         // Обработчик клика по кнопке отмены удаления
         cancelDelete.addEventListener('click', function() {
             confirmModal.classList.remove('active');
-            currentCategoryIdToDelete = null;
+            currentCategoryToDelete = null;
         });
 
         // Обработчик клика по кнопке подтверждения удаления
-        confirmDelete.addEventListener('click', function() {
-            if (currentCategoryIdToDelete !== null) {
-                storage.remove(currentCategoryIdToDelete);
-                renderCategories();
+        confirmDelete.addEventListener('click', async function() {
+            if (currentCategoryToDelete !== null) {
+                // Показываем процесс загрузки
+                confirmDelete.disabled = true;
+                confirmDelete.textContent = 'Удаление...';
+                
+                await storage.remove(currentCategoryToDelete);
+                await renderCategories();
+                
+                // Возвращаем кнопку в исходное состояние
+                confirmDelete.disabled = false;
+                confirmDelete.textContent = 'Удалить';
+                
                 confirmModal.classList.remove('active');
-                currentCategoryIdToDelete = null;
+                currentCategoryToDelete = null;
             }
         });
 
@@ -556,7 +796,7 @@
         window.addEventListener('click', function(e) {
             if (e.target === confirmModal) {
                 confirmModal.classList.remove('active');
-                currentCategoryIdToDelete = null;
+                currentCategoryToDelete = null;
             }
             if (e.target === inputModal) {
                 inputModal.classList.remove('active');
@@ -570,7 +810,74 @@
             errorMessage.style.display = 'none';
         });
 
+        // Добавление по нажатию Enter
+        newCategoryInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                confirmAdd.click();
+            }
+        });
+
+        // Функция выбора категории и перехода к списку
+        function selectCategoryAndNavigate(categoryName) {
+            // Увеличиваем счетчик использования категории
+            storage.incrementUsage(categoryName);
+            
+            // Получаем ранее сохраненные фильтры (если есть)
+            const pendingFiltersStr = localStorage.getItem('pendingFilters');
+            console.log('📖 [index2.html] Сырые данные из localStorage:', pendingFiltersStr);
+            
+            const pendingFilters = pendingFiltersStr ? JSON.parse(pendingFiltersStr) : {};
+            console.log('📖 [index2.html] Распарсенные фильтры:', pendingFilters);
+            
+            // Добавляем выбранную категорию
+            pendingFilters.category = categoryName;
+            pendingFilters.timestamp = Date.now();
+            
+            // Сохраняем обновленные фильтры
+            const updatedFiltersStr = JSON.stringify(pendingFilters);
+            localStorage.setItem('pendingFilters', updatedFiltersStr);
+            console.log('💾 [index2.html] Обновленные фильтры:', pendingFilters);
+            console.log('💾 [index2.html] Строка для сохранения:', updatedFiltersStr);
+            
+            // Проверяем что сохранилось
+            const checkSaved = localStorage.getItem('pendingFilters');
+            console.log('🔍 [index2.html] Проверка сохранения:', checkSaved);
+            
+            // Переходим на страницу списка фильмов
+            window.location.href = 'list_sorting.html';
+        }
+
+        // Переход к списку всех фильмов (с сохранением фильтров, если они есть)
+        function goToList() {
+            const pendingFilters = JSON.parse(localStorage.getItem('pendingFilters') || '{}');
+            if (Object.keys(pendingFilters).length > 1) { // timestamp всегда есть
+                console.log('📋 [index2.html] Переход к списку с фильтрами:', pendingFilters);
+            } else {
+                console.log('📋 [index2.html] Переход к списку без фильтров');
+            }
+            window.location.href = 'list_sorting.html';
+        }
+
+        // Проверка фильтров при загрузке страницы
+        function checkPendingFiltersOnLoad() {
+            const pendingFiltersStr = localStorage.getItem('pendingFilters');
+            if (pendingFiltersStr) {
+                const pendingFilters = JSON.parse(pendingFiltersStr);
+                console.log('🎯 [index2.html ЗАГРУЗКА] Найдены фильтры из предыдущей страницы:', pendingFilters);
+                
+                if (pendingFilters.contentType) {
+                    console.log('  → Тип контента:', pendingFilters.contentType);
+                }
+                if (pendingFilters.watchStatus) {
+                    console.log('  → Статус просмотра:', pendingFilters.watchStatus);
+                }
+            } else {
+                console.log('🎯 [index2.html ЗАГРУЗКА] Фильтры не найдены');
+            }
+        }
+
         // Инициализация при загрузке страницы
+        checkPendingFiltersOnLoad();
         renderCategories();
     </script>
 </body>
