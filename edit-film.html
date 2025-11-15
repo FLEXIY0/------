@@ -64,7 +64,7 @@
             padding: 12px 20px;
             background: transparent;
             border: none;
-            color: #9E9E9E;
+            color: #B8B8B8;
             font-size: 24px;
             font-weight: 600;
             text-align: center;
@@ -111,6 +111,130 @@
 
         .poster-section.readonly {
             cursor: default;
+        }
+
+        .extra-info-section {
+            background: #212121;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .extra-info-title {
+            color: #B8B8B8;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .extra-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .extra-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .extra-info-label {
+            color: #888;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .extra-info-input {
+            background: #2a2a2a;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #B8B8B8;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .extra-info-input:focus {
+            outline: none;
+            background: #323232;
+        }
+
+        .extra-info-input[readonly] {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .extra-info-facts {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .extra-info-textarea {
+            background: #2a2a2a;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            color: #B8B8B8;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.6;
+            transition: background 0.2s;
+        }
+
+        .extra-info-textarea:focus {
+            outline: none;
+            background: #323232;
+        }
+
+        .extra-info-textarea[readonly] {
+            cursor: default;
+            pointer-events: none;
+            resize: none;
+        }
+
+        .extra-info-textarea[readonly]::placeholder {
+            opacity: 0;
+        }
+
+        .extra-info-content {
+            background: #2a2a2a;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            color: #B8B8B8;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 80px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        .extra-info-content:focus {
+            background: #323232;
+        }
+
+        .extra-info-content[contenteditable="false"] {
+            cursor: default;
+        }
+
+        .extra-info-content a {
+            color: #ff3c0089;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .extra-info-content a:hover {
+            color: #FF3333;
+            text-decoration: underline;
         }
 
         .poster-section:not(.readonly):hover {
@@ -168,6 +292,10 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+
+        .preview-item.tall {
+            aspect-ratio: 4/3;
         }
 
         .preview-item.readonly {
@@ -457,8 +585,9 @@
         .right-column {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
             overflow: visible;
+            height: 100%;
         }
 
         .description-section {
@@ -480,16 +609,17 @@
         .description-textarea {
             flex: 1;
             width: 100%;
-            background: #3e3e3e;
+            background: #2A2A2A;
             border: none;
             border-radius: 8px;
             padding: 15px;
-            color: #9E9E9E;
+            color: #B8B8B8;
             font-size: 14px;
             line-height: 1.6;
             resize: vertical;
             font-family: "Inter", sans-serif;
-            min-height: 180px;
+            min-height: 280px;
+            overflow-y: auto;
         }
 
         .description-textarea:focus {
@@ -499,6 +629,8 @@
 
         .description-textarea[readonly] {
             cursor: default;
+            overflow-y: auto !important;
+            resize: none;
         }
 
         .description-textarea[readonly]::placeholder {
@@ -509,7 +641,6 @@
             background: #212121;
             padding: 15px;
             border-radius: 12px;
-            flex: 1;
             overflow: visible;
         }
 
@@ -1064,6 +1195,25 @@
             background: #212121;
             border-radius: 12px;
             padding: 20px;
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column .review-section {
+            flex: 1;
+            min-height: 300px;
+            margin-top: 0;
+        }
+
+        .right-column .review-section .review-textarea {
+            flex: 1;
+            min-height: 200px;
+            height: auto;
+        }
+
+        .extra-info-section .review-section {
+            margin-top: 20px;
         }
 
         .section-header {
@@ -1076,17 +1226,17 @@
         .section-title {
             font-size: 20px;
             font-weight: 600;
-            color: #9E9E9E;
+            color: #B8B8B8;
         }
 
         .review-textarea {
             width: 100%;
             min-height: 200px;
-            background: #3e3e3e;
+            background: #2A2A2A;
             border: none;
             border-radius: 8px;
             padding: 15px;
-            color: #9E9E9E;
+            color: #B8B8B8;
             font-size: 14px;
             line-height: 1.6;
             resize: vertical;
@@ -1281,6 +1431,23 @@
                 font-size: 11px;
                 padding: 6px 10px;
             }
+
+            .description-section {
+                min-height: auto;
+            }
+
+            .description-textarea {
+                min-height: 150px;
+                height: auto !important;
+                overflow-y: auto !important;
+                resize: none;
+            }
+
+            .review-textarea {
+                min-height: 180px;
+                height: auto !important;
+                overflow-y: auto !important;
+            }
         }
     </style>
 </head>
@@ -1344,19 +1511,19 @@
                     </div>
                 </div>
 
-                <!-- Звёзды под превью -->
+                <!-- Звёзды и рейтинги -->
                 <div class="rating-row">
                     <div class="rating-left-group">
-                        <div class="stars-container" id="starsContainer">
-                            <span class="star readonly" data-value="1" title="1 / 2"></span>
-                            <span class="star readonly" data-value="2" title="3 / 4"></span>
-                            <span class="star readonly" data-value="3" title="5 / 6"></span>
-                            <span class="star readonly" data-value="4" title="7 / 8"></span>
-                            <span class="star readonly" data-value="5" title="9 / 10"></span>
-                        </div>
-                        <div class="rating-display-wrapper">
-                            <div class="rating-display" id="ratingDisplay">0</div>
-                            <div class="rating-max">/10</div>
+                    <div class="stars-container" id="starsContainer">
+                        <span class="star readonly" data-value="1" title="1 / 2"></span>
+                        <span class="star readonly" data-value="2" title="3 / 4"></span>
+                        <span class="star readonly" data-value="3" title="5 / 6"></span>
+                        <span class="star readonly" data-value="4" title="7 / 8"></span>
+                        <span class="star readonly" data-value="5" title="9 / 10"></span>
+                    </div>
+                    <div class="rating-display-wrapper">
+                        <div class="rating-display" id="ratingDisplay">0</div>
+                        <div class="rating-max">/10</div>
                         </div>
                     </div>
                     <div class="rating-metrics">
@@ -1374,25 +1541,52 @@
                     <div class="api-icons">
                         <div class="api-rating-container">
                             <a href="#" class="api-link" id="kinopoiskLink" target="_blank" rel="noopener noreferrer">
-                                <div class="api-icon" style="background: #FF6600;" title="Kinopoisk">
+                        <div class="api-icon" style="background: #FF6600;" title="Kinopoisk">
                                     <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
                                         <text x="50%" y="70%" text-anchor="middle" font-size="17" font-weight="bold">K</text>
-                                    </svg>
-                                </div>
+                            </svg>
+                        </div>
                                 <div class="api-rating-value kinopoisk" id="kinopoiskRating">—</div>
                             </a>
                         </div>
                         <div class="api-rating-container">
                             <a href="#" class="api-link" id="imdbLink" target="_blank" rel="noopener noreferrer">
-                                <div class="api-icon" style="background: #F5C518;" title="IMDB">
+                        <div class="api-icon" style="background: #F5C518;" title="IMDB">
                                     <svg width="22" height="22" viewBox="0 0 24 24">
-                                        <rect width="24" height="24" fill="#F5C518"/>
+                                <rect width="24" height="24" fill="#F5C518"/>
                                         <text x="50%" y="70%" text-anchor="middle" font-size="9" font-weight="bold" fill="#000">IMDb</text>
-                                    </svg>
-                                </div>
+                            </svg>
+                        </div>
                                 <div class="api-rating-value imdb" id="imdbRating">—</div>
                             </a>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Дополнительная информация (под рейтингами) -->
+                <div class="extra-info-section" id="extraInfoSection" style="display: none;">
+                    <div class="extra-info-title">Дополнительная информация</div>
+                    <div class="extra-info-grid">
+                        <div class="extra-info-item">
+                            <div class="extra-info-label">Длительность</div>
+                            <input type="text" class="extra-info-input" id="duration" placeholder="—" readonly>
+                        </div>
+                        <div class="extra-info-item">
+                            <div class="extra-info-label">Возрастной рейтинг</div>
+                            <input type="text" class="extra-info-input" id="ageRating" placeholder="—" readonly>
+                        </div>
+                        <div class="extra-info-item">
+                            <div class="extra-info-label">Слоган</div>
+                            <input type="text" class="extra-info-input" id="slogan" placeholder="—" readonly>
+                        </div>
+                        <div class="extra-info-item">
+                            <div class="extra-info-label">Бюджет</div>
+                            <input type="text" class="extra-info-input" id="budget" placeholder="—" readonly>
+                        </div>
+                    </div>
+                    <div class="extra-info-facts">
+                        <div class="extra-info-label">Интересные факты</div>
+                        <div class="extra-info-content" id="interestingFacts"></div>
                     </div>
                 </div>
             </div>
@@ -1401,13 +1595,13 @@
             <div class="right-column">
                 <!-- Описание фильма -->
                 <div class="description-section">
-                    <div class="description-title">Описание фильма/сериала</div>
+                    <div class="description-title">Описание</div>
                     <textarea class="description-textarea" id="filmDescription" placeholder="Напишите описание фильма..." readonly></textarea>
                 </div>
 
                 <!-- Метаданные -->
                 <div class="metadata-section">
-                    <div class="metadata-text">Основные метрики по фильму (можно написать самому, а можно будет подгружать через API)</div>
+                    <div class="metadata-text"> <h3>Основные метрики</h3></div> 
                     <div class="metadata-grid">
                         <div class="metadata-item">
                             <div>Год производства</div>
@@ -1533,8 +1727,6 @@
                         <div class="metadata-item" id="lastEpisodeField" style="display: none;">
                             <div>Последняя серия</div>
                             <input type="text" class="metadata-input" id="lastEpisode" placeholder="например: С2:Э5 или 2:5" readonly>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1545,6 +1737,8 @@
                 <span class="section-title">Личный отзыв</span>
             </div>
             <textarea class="review-textarea" id="personalReview" placeholder="Напишите свой отзыв..." readonly></textarea>
+                </div>
+            </div>
         </div>
 
         <button class="save-button" id="saveButton" onclick="saveFilm()">Сохранить</button>
@@ -2563,33 +2757,53 @@
             }
         };
 
-        // Автоматическое изменение высоты textarea для личного отзыва
+        // Автоматическое изменение высоты textarea
         const reviewTextarea = document.getElementById('personalReview');
+        const descriptionTextarea = document.getElementById('filmDescription');
         
         function autoResizeTextarea(textarea) {
             // Сброс высоты для корректного расчета scrollHeight
             textarea.style.height = 'auto';
-            // Установка высоты на основе содержимого
-            const newHeight = Math.max(200, textarea.scrollHeight);
+            
+            // Минимальная высота в зависимости от поля
+            const minHeight = textarea.id === 'filmDescription' ? 180 : 200;
+            
+            // Рассчитываем новую высоту с учетом padding
+            const scrollHeight = textarea.scrollHeight;
+            const newHeight = Math.max(minHeight, scrollHeight + 2);
+            
             textarea.style.height = newHeight + 'px';
+            
+            // Если содержимое меньше минимальной высоты, устанавливаем минимум
+            if (scrollHeight <= minHeight) {
+                textarea.style.overflowY = 'hidden';
+            } else {
+                textarea.style.overflowY = 'auto';
+            }
         }
         
-        // Обработчик ввода текста
+        // Обработчики для личного отзыва
         reviewTextarea.addEventListener('input', function() {
             autoResizeTextarea(this);
         });
         
-        // Обработчик для вставки текста
         reviewTextarea.addEventListener('paste', function() {
             setTimeout(() => autoResizeTextarea(this), 0);
         });
         
-        // Обработчик для изменения размера вручную
         reviewTextarea.addEventListener('mouseup', function() {
-            // Сохраняем высоту, установленную пользователем
             if (this.style.height) {
                 this.dataset.userHeight = this.style.height;
             }
+        });
+        
+        // Обработчики для описания фильма
+        descriptionTextarea.addEventListener('input', function() {
+            autoResizeTextarea(this);
+        });
+        
+        descriptionTextarea.addEventListener('paste', function() {
+            setTimeout(() => autoResizeTextarea(this), 0);
         });
 
         // Загрузка данных при открытии
@@ -2624,12 +2838,29 @@
                 document.getElementById('personalReview').value = data.personalReview || '';
                 
                 // Автоматически подстроить высоту textarea под содержимое
-                setTimeout(() => autoResizeTextarea(reviewTextarea), 0);
+                setTimeout(() => {
+                    autoResizeTextarea(descriptionTextarea);
+                    autoResizeTextarea(reviewTextarea);
+                }, 0);
                 
                 // Новые поля
                 customTypeSelect.setValue(data.contentType || '');
                 customStatusSelect.setValue(data.watchStatus || '');
                 document.getElementById('lastEpisode').value = data.lastEpisode || '';
+                
+                // Дополнительная информация
+                document.getElementById('duration').value = data.duration || '';
+                document.getElementById('ageRating').value = data.ageRating || '';
+                document.getElementById('slogan').value = data.slogan || '';
+                document.getElementById('budget').value = data.budget || '';
+                
+                // Интересные факты с поддержкой HTML
+                const factsElement = document.getElementById('interestingFacts');
+                if (data.interestingFacts) {
+                    factsElement.innerHTML = data.interestingFacts;
+                } else {
+                    factsElement.innerHTML = '';
+                }
                 
                 // Рейтинги
                 if (data.kinopoiskRating) {
@@ -2684,17 +2915,17 @@
                     });
                 } else {
                     // Локальные файлы (старый формат)
-                    if (data.preview1) {
+                if (data.preview1) {
                         loadedPreviewUrls[0] = data.preview1;
-                        showPreviewImage(0, data.preview1);
-                    }
-                    if (data.preview2) {
+                    showPreviewImage(0, data.preview1);
+                }
+                if (data.preview2) {
                         loadedPreviewUrls[1] = data.preview2;
-                        showPreviewImage(1, data.preview2);
-                    }
-                    if (data.preview3) {
+                    showPreviewImage(1, data.preview2);
+                }
+                if (data.preview3) {
                         loadedPreviewUrls[2] = data.preview3;
-                        showPreviewImage(2, data.preview3);
+                    showPreviewImage(2, data.preview3);
                     }
                 }
             } catch (error) {
@@ -2738,6 +2969,16 @@
             customTypeSelect.setDisabled(!isEditMode);
             customStatusSelect.setDisabled(!isEditMode);
             document.getElementById('lastEpisode').readOnly = !isEditMode;
+            
+            // Дополнительная информация
+            document.getElementById('duration').readOnly = !isEditMode;
+            document.getElementById('ageRating').readOnly = !isEditMode;
+            document.getElementById('slogan').readOnly = !isEditMode;
+            document.getElementById('budget').readOnly = !isEditMode;
+            
+            // Интересные факты (contenteditable)
+            const factsElement = document.getElementById('interestingFacts');
+            factsElement.contentEditable = isEditMode;
             
             // Обновить кнопку добавления категории
             categoryAutocomplete.updateAddButton();
@@ -2951,6 +3192,7 @@
                     img.style.height = '100%';
                     img.style.maxHeight = 'none';
                     img.style.objectFit = 'cover';
+                    toggleExtraInfo(false); // Скрыть дополнительную информацию
                 } else if (aspectRatio >= 0.8 && aspectRatio <= 1.2) {
                     // Квадратное или близкое к квадрату изображение
                     posterSection.style.aspectRatio = '1/1';
@@ -2960,6 +3202,7 @@
                     img.style.height = '100%';
                     img.style.maxHeight = 'none';
                     img.style.objectFit = 'cover';
+                    toggleExtraInfo(true); // Показать дополнительную информацию
                 } else if (aspectRatio > 1.2 && aspectRatio < 1.6) {
                     // Умеренно горизонтальное (4:3 и похожие)
                     posterSection.style.aspectRatio = '4/3';
@@ -2969,6 +3212,7 @@
                     img.style.height = '100%';
                     img.style.maxHeight = 'none';
                     img.style.objectFit = 'cover';
+                    toggleExtraInfo(true); // Показать дополнительную информацию
                 } else {
                     // Широкое горизонтальное изображение (16:9 и шире)
                     posterSection.style.aspectRatio = '16/9';
@@ -2978,12 +3222,29 @@
                     img.style.height = '100%';
                     img.style.maxHeight = '';
                     img.style.objectFit = 'contain';
+                    toggleExtraInfo(true); // Показать дополнительную информацию
                 }
             };
             
             img.src = src;
             img.style.display = 'block';
             document.getElementById('bannerText').style.display = 'none';
+        }
+
+        // Управление высотой превью и видимостью дополнительной информации
+        function toggleExtraInfo(show) {
+            const extraInfoSection = document.getElementById('extraInfoSection');
+            const previewItems = document.querySelectorAll('.preview-item');
+            
+            if (show) {
+                // Показать доп. информацию и сделать превью выше (4:3)
+                extraInfoSection.style.display = 'block';
+                previewItems.forEach(item => item.classList.add('tall'));
+            } else {
+                // Скрыть доп. информацию и вернуть превью к стандартной высоте (16:9)
+                extraInfoSection.style.display = 'none';
+                previewItems.forEach(item => item.classList.remove('tall'));
+            }
         }
 
         // Загрузка превью
@@ -3053,7 +3314,13 @@
                 previewUrls: [0, 1, 2].map(i => loadedPreviewUrls[i] || null),
                 // Сохраняем URL страниц на Кинопоиске и IMDb
                 kinopoiskUrl: kinopoiskUrl || null,
-                imdbUrl: imdbUrl || null
+                imdbUrl: imdbUrl || null,
+                // Дополнительная информация
+                duration: document.getElementById('duration').value || null,
+                ageRating: document.getElementById('ageRating').value || null,
+                slogan: document.getElementById('slogan').value || null,
+                budget: document.getElementById('budget').value || null,
+                interestingFacts: document.getElementById('interestingFacts').innerHTML || null
             };
 
             // Логирование для отладки
@@ -3078,9 +3345,9 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(tempData)
                     });
-                    
-                    const result = await response.json();
-                    currentFilmId = result.id;
+
+                const result = await response.json();
+                currentFilmId = result.id;
                     console.log('✅ Карточка создана, ID:', currentFilmId);
                 }
 
@@ -3410,12 +3677,13 @@
                 if (!isEditMode) {
                     toggleEditMode();
                 }
-                
-                // Заполнение данных
+                    
+                    // Заполнение данных
                 
                 // 1. Описание
                 if (filmDetails.description) {
                     document.getElementById('filmDescription').value = filmDetails.description;
+                    setTimeout(() => autoResizeTextarea(descriptionTextarea), 0);
                 }
                 
                 // 2. Рейтинг Кинопоиска
@@ -3491,6 +3759,91 @@
                 if (filmDetails.genres && filmDetails.genres.length > 0) {
                     const genres = filmDetails.genres.map(g => g.genre);
                     genreHintManager.update(genres);
+                }
+                
+                // 6.6. Дополнительная информация
+                // 1. Длительность (filmLength в минутах)
+                if (filmDetails.filmLength) {
+                    const hours = Math.floor(filmDetails.filmLength / 60);
+                    const minutes = filmDetails.filmLength % 60;
+                    const durationText = hours > 0 ? `${hours}ч ${minutes}мин` : `${minutes}мин`;
+                    document.getElementById('duration').value = durationText;
+                }
+                
+                // 2. Возрастной рейтинг (ratingAgeLimits, например "age16" → "16+")
+                if (filmDetails.ratingAgeLimits) {
+                    const ageMatch = filmDetails.ratingAgeLimits.match(/\d+/);
+                    if (ageMatch) {
+                        document.getElementById('ageRating').value = ageMatch[0] + '+';
+                    }
+                }
+                
+                // 3. Слоган (slogan)
+                if (filmDetails.slogan) {
+                    document.getElementById('slogan').value = filmDetails.slogan;
+                }
+                
+                // 4. Бюджет (из API v2.2/films/{id}/box_office)
+                try {
+                    const boxOfficeResponse = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/${filmId}/box_office`, {
+                        headers: {
+                            'X-API-KEY': apiKey,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (boxOfficeResponse.ok) {
+                        const boxOfficeData = await boxOfficeResponse.json();
+                        
+                        // Ищем бюджет
+                        if (boxOfficeData.budget && boxOfficeData.budget.amount) {
+                            const budgetAmount = boxOfficeData.budget.amount;
+                            let budgetText = '';
+                            
+                            if (budgetAmount >= 1000000) {
+                                budgetText = `$${(budgetAmount / 1000000).toFixed(1)} млн`;
+                            } else if (budgetAmount >= 1000) {
+                                budgetText = `$${(budgetAmount / 1000).toFixed(0)} тыс`;
+                            } else {
+                                budgetText = `$${budgetAmount}`;
+                            }
+                            
+                            document.getElementById('budget').value = budgetText;
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Ошибка загрузки бюджета:', error);
+                }
+                
+                // 5. Интересные факты с поддержкой HTML-ссылок
+                try {
+                    const factsResponse = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${filmId}/facts`, {
+                        headers: {
+                            'X-API-KEY': apiKey,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (factsResponse.ok) {
+                        const factsData = await factsResponse.json();
+                        if (factsData.items) {
+                            // Берем первые 3 факта и преобразуем текст в HTML с ссылками
+                            const factsHtml = factsData.items
+                                .filter(item => item.type === 'FACT')
+                                .slice(0, 3)
+                                .map(item => {
+                                    // Преобразуем текст с HTML тегами
+                                    return item.text;
+                                })
+                                .join('<br><br>');
+                            
+                            if (factsHtml) {
+                                document.getElementById('interestingFacts').innerHTML = factsHtml;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Ошибка загрузки фактов:', error);
                 }
                 
                 // 7. Загрузка постера (баннера)
@@ -3601,11 +3954,19 @@
             document.getElementById('personalReview').value = '';
             
             // Сбросить высоту textarea
+            descriptionTextarea.style.height = '180px';
             reviewTextarea.style.height = '200px';
             
             customTypeSelect.setValue('');
             customStatusSelect.setValue('');
             document.getElementById('lastEpisode').value = '';
+            
+            // Очистка дополнительной информации
+            document.getElementById('duration').value = '';
+            document.getElementById('ageRating').value = '';
+            document.getElementById('slogan').value = '';
+            document.getElementById('budget').value = '';
+            document.getElementById('interestingFacts').innerHTML = '';
             
             // Сброс рейтинга
             setRating(0);
@@ -3656,6 +4017,9 @@
             
             // Очистка жанров
             genreHintManager.clear();
+            
+            // Скрыть блок дополнительной информации
+            toggleExtraInfo(false);
             
             console.log('Все данные и URL изображений очищены');
             categoryAutocomplete.showNotification('Все данные очищены', 'success');
