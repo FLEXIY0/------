@@ -783,21 +783,6 @@
             color: #9E9E9E;
         }
 
-        .edit-icon {
-            cursor: pointer;
-            font-size: 20px;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .edit-icon:hover {
-            transform: scale(1.2);
-        }
-
-        .edit-icon.active {
-            color: #4CAF50;
-        }
-
         .review-textarea {
             width: 100%;
             min-height: 200px;
@@ -849,6 +834,101 @@
             pointer-events: none;
         }
 
+        /* Sidebar Menu Styles */
+        .sidebar-menu-trigger {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 80px;
+            height: 100%;
+            z-index: 98;
+        }
+
+        .sidebar-menu-container {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) translateX(calc(-100% + 8px));
+            transition: transform 0.3s ease;
+            z-index: 99;
+        }
+
+        .sidebar-menu-trigger:hover ~ .sidebar-menu-container,
+        .sidebar-menu-container:hover {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .sidebar-menu {
+            width: 70px;
+            background: #212121;
+            border-radius: 0 35px 35px 0;
+            border: 3px solid transparent;
+            border-left: none;
+            padding: 15px 10px 15px 13px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar-menu:hover {
+            border-color: #323232;
+            box-shadow: 4px 0 12px rgba(55, 55, 55, 0.3);
+        }
+
+        .sidebar-menu-item {
+            width: 50px;
+            height: 50px;
+            background: #3e3e3e;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+            margin-left: -5px;
+        }
+
+        .sidebar-menu-item:hover {
+            background: #4e4e4e;
+            transform: scale(1.1);
+        }
+
+        .sidebar-menu-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .sidebar-menu-text {
+            position: absolute;
+            left: calc(100% + 15px);
+            background: rgba(62, 62, 62, 0.95);
+            color: #9E9E9E;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .sidebar-menu-item:hover .sidebar-menu-text {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hide dropdown arrows and add button in read-only mode */
+        .readonly-mode .custom-select-arrow,
+        .readonly-mode .add-category-btn {
+            display: none !important;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -861,6 +941,36 @@
             .preview-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .sidebar-menu-trigger {
+                width: 60px;
+            }
+
+            .sidebar-menu-container {
+                left: 0;
+                transform: translateY(-50%) translateX(calc(-100% + 6px));
+            }
+
+            .sidebar-menu {
+                width: 60px;
+                padding: 12px 8px 12px 11px;
+                gap: 12px;
+            }
+
+            .sidebar-menu-item {
+                width: 44px;
+                height: 44px;
+                margin-left: -3px;
+            }
+
+            .sidebar-menu-icon {
+                font-size: 20px;
+            }
+
+            .sidebar-menu-text {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
@@ -869,6 +979,27 @@
     <div class="notification" id="notification">
         <span class="notification-icon">✓</span>
         <span id="notificationText">Категория сохранена</span>
+    </div>
+
+    <!-- Sidebar Menu Trigger -->
+    <div class="sidebar-menu-trigger"></div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-menu-container">
+        <div class="sidebar-menu">
+            <div class="sidebar-menu-item" onclick="toggleEditModeFromSidebar()">
+                <div class="sidebar-menu-icon" id="sidebarEditIcon">📖</div>
+                <div class="sidebar-menu-text" id="sidebarEditText">Режим чтения</div>
+            </div>
+            <div class="sidebar-menu-item" onclick="loadDataFromAPI()">
+                <div class="sidebar-menu-icon">🎬</div>
+                <div class="sidebar-menu-text">Загрузить из Кинопоиска</div>
+            </div>
+            <div class="sidebar-menu-item" onclick="clearAllData()">
+                <div class="sidebar-menu-icon">🗑️</div>
+                <div class="sidebar-menu-text">Очистить все данные</div>
+            </div>
+        </div>
     </div>
 
     <div class="container">
@@ -1003,6 +1134,50 @@
                             <div>Подкатегории</div>
                             <input type="text" class="metadata-input" id="subCategory" placeholder="" readonly>
                         </div>
+                        <div class="metadata-item">
+                            <div>Тип</div>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="customTypeSelect">
+                                    <div class="custom-select-trigger" id="typeSelectTrigger">
+                                        <span id="typeSelectValue">Выберите тип</span>
+                                        <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown" id="typeSelectDropdown">
+                                        <div class="custom-select-options" id="typeSelectOptions">
+                                            <div class="custom-select-option" data-value="movie">Фильм</div>
+                                            <div class="custom-select-option" data-value="series">Сериал</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="contentType" name="contentType" value="">
+                            </div>
+                        </div>
+                        <div class="metadata-item" id="seriesStatusField" style="display: none;">
+                            <div>Статус просмотра</div>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="customStatusSelect">
+                                    <div class="custom-select-trigger" id="statusSelectTrigger">
+                                        <span id="statusSelectValue">Выберите статус</span>
+                                        <svg class="custom-select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown" id="statusSelectDropdown">
+                                        <div class="custom-select-options" id="statusSelectOptions">
+                                            <div class="custom-select-option" data-value="watched">Просмотрен</div>
+                                            <div class="custom-select-option" data-value="watching">Не просмотрен</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="watchStatus" name="watchStatus" value="">
+                            </div>
+                        </div>
+                        <div class="metadata-item" id="lastEpisodeField" style="display: none;">
+                            <div>Последняя серия</div>
+                            <input type="text" class="metadata-input" id="lastEpisode" placeholder="например: С2:Э5 или 2:5" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1012,7 +1187,6 @@
         <div class="review-section">
             <div class="section-header">
                 <span class="section-title">Личный отзыв</span>
-                <span class="edit-icon" id="editIcon" onclick="toggleEditMode()">✏️</span>
             </div>
             <textarea class="review-textarea" id="personalReview" placeholder="Напишите свой отзыв..." readonly></textarea>
         </div>
@@ -1140,6 +1314,249 @@
 
         // Инициализация
         customYearSelect.init();
+
+        // Кастомный Type Select
+        const customTypeSelect = {
+            element: document.getElementById('customTypeSelect'),
+            trigger: document.getElementById('typeSelectTrigger'),
+            dropdown: document.getElementById('typeSelectDropdown'),
+            options: document.getElementById('typeSelectOptions'),
+            valueDisplay: document.getElementById('typeSelectValue'),
+            hiddenInput: document.getElementById('contentType'),
+            isOpen: false,
+            
+            init() {
+                // Обработчики для всех опций
+                this.options.querySelectorAll('.custom-select-option').forEach(option => {
+                    option.addEventListener('click', () => this.selectOption(option));
+                });
+                
+                // Обработчик клика на trigger
+                this.trigger.addEventListener('click', (e) => {
+                    if (!this.element.classList.contains('disabled')) {
+                        e.stopPropagation();
+                        this.toggle();
+                    }
+                });
+                
+                // Закрытие при клике вне
+                document.addEventListener('click', (e) => {
+                    if (!this.element.contains(e.target)) {
+                        this.close();
+                    }
+                });
+            },
+            
+            toggle() {
+                this.isOpen ? this.close() : this.open();
+            },
+            
+            open() {
+                this.element.classList.add('active');
+                this.isOpen = true;
+            },
+            
+            close() {
+                this.element.classList.remove('active');
+                this.isOpen = false;
+            },
+            
+            selectOption(option) {
+                const value = option.dataset.value;
+                
+                // Убрать selected у всех
+                this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Добавить selected к выбранному
+                option.classList.add('selected');
+                
+                // Обновить значение
+                this.valueDisplay.textContent = option.textContent;
+                this.hiddenInput.value = value;
+                
+                // Показать/скрыть поля для сериалов
+                handleTypeChange(value);
+                
+                this.close();
+            },
+            
+            setValue(value) {
+                if (value) {
+                    const option = this.options.querySelector(`[data-value="${value}"]`);
+                    if (option) {
+                        this.valueDisplay.textContent = option.textContent;
+                        this.hiddenInput.value = value;
+                        
+                        // Отметить опцию как selected
+                        this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                            if (opt.dataset.value === value) {
+                                opt.classList.add('selected');
+                            } else {
+                                opt.classList.remove('selected');
+                            }
+                        });
+                        
+                        // Показать/скрыть поля для сериалов
+                        handleTypeChange(value);
+                    }
+                } else {
+                    this.valueDisplay.textContent = 'Выберите тип';
+                    this.hiddenInput.value = '';
+                    this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    handleTypeChange('');
+                }
+            },
+            
+            setDisabled(disabled) {
+                if (disabled) {
+                    this.element.classList.add('disabled');
+                    this.close();
+                } else {
+                    this.element.classList.remove('disabled');
+                }
+            }
+        };
+
+        // Кастомный Status Select
+        const customStatusSelect = {
+            element: document.getElementById('customStatusSelect'),
+            trigger: document.getElementById('statusSelectTrigger'),
+            dropdown: document.getElementById('statusSelectDropdown'),
+            options: document.getElementById('statusSelectOptions'),
+            valueDisplay: document.getElementById('statusSelectValue'),
+            hiddenInput: document.getElementById('watchStatus'),
+            isOpen: false,
+            
+            init() {
+                // Обработчики для всех опций
+                this.options.querySelectorAll('.custom-select-option').forEach(option => {
+                    option.addEventListener('click', () => this.selectOption(option));
+                });
+                
+                // Обработчик клика на trigger
+                this.trigger.addEventListener('click', (e) => {
+                    if (!this.element.classList.contains('disabled')) {
+                        e.stopPropagation();
+                        this.toggle();
+                    }
+                });
+                
+                // Закрытие при клике вне
+                document.addEventListener('click', (e) => {
+                    if (!this.element.contains(e.target)) {
+                        this.close();
+                    }
+                });
+            },
+            
+            toggle() {
+                this.isOpen ? this.close() : this.open();
+            },
+            
+            open() {
+                this.element.classList.add('active');
+                this.isOpen = true;
+            },
+            
+            close() {
+                this.element.classList.remove('active');
+                this.isOpen = false;
+            },
+            
+            selectOption(option) {
+                const value = option.dataset.value;
+                
+                // Убрать selected у всех
+                this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Добавить selected к выбранному
+                option.classList.add('selected');
+                
+                // Обновить значение
+                this.valueDisplay.textContent = option.textContent;
+                this.hiddenInput.value = value;
+                
+                // Показать/скрыть поле последней серии
+                handleStatusChange(value);
+                
+                this.close();
+            },
+            
+            setValue(value) {
+                if (value) {
+                    const option = this.options.querySelector(`[data-value="${value}"]`);
+                    if (option) {
+                        this.valueDisplay.textContent = option.textContent;
+                        this.hiddenInput.value = value;
+                        
+                        // Отметить опцию как selected
+                        this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                            if (opt.dataset.value === value) {
+                                opt.classList.add('selected');
+                            } else {
+                                opt.classList.remove('selected');
+                            }
+                        });
+                        
+                        // Показать/скрыть поле последней серии
+                        handleStatusChange(value);
+                    }
+                } else {
+                    this.valueDisplay.textContent = 'Выберите статус';
+                    this.hiddenInput.value = '';
+                    this.options.querySelectorAll('.custom-select-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    handleStatusChange('');
+                }
+            },
+            
+            setDisabled(disabled) {
+                if (disabled) {
+                    this.element.classList.add('disabled');
+                    this.close();
+                } else {
+                    this.element.classList.remove('disabled');
+                }
+            }
+        };
+
+        // Инициализация новых селектов
+        customTypeSelect.init();
+        customStatusSelect.init();
+
+        // Функция для обработки изменения типа контента
+        function handleTypeChange(type) {
+            const seriesStatusField = document.getElementById('seriesStatusField');
+            const lastEpisodeField = document.getElementById('lastEpisodeField');
+            
+            if (type === 'series') {
+                seriesStatusField.style.display = 'block';
+                // Проверяем статус просмотра
+                const watchStatus = document.getElementById('watchStatus').value;
+                handleStatusChange(watchStatus);
+            } else {
+                seriesStatusField.style.display = 'none';
+                lastEpisodeField.style.display = 'none';
+            }
+        }
+
+        // Функция для обработки изменения статуса просмотра
+        function handleStatusChange(status) {
+            const lastEpisodeField = document.getElementById('lastEpisodeField');
+            
+            if (status === 'watching') {
+                lastEpisodeField.style.display = 'block';
+            } else {
+                lastEpisodeField.style.display = 'none';
+            }
+        }
 
         // Список стран с кодами для флагов (используем flagcdn.com)
         const countries = [
@@ -1566,6 +1983,11 @@
                 document.getElementById('filmDescription').value = data.filmDescription || '';
                 document.getElementById('personalReview').value = data.personalReview || '';
                 
+                // Новые поля
+                customTypeSelect.setValue(data.contentType || '');
+                customStatusSelect.setValue(data.watchStatus || '');
+                document.getElementById('lastEpisode').value = data.lastEpisode || '';
+                
                 setRating(data.rating || 0);
                 
                 // Загрузка баннера
@@ -1591,16 +2013,22 @@
         // Переключение режима редактирования
         function toggleEditMode() {
             isEditMode = !isEditMode;
-            const editIcon = document.getElementById('editIcon');
             const saveButton = document.getElementById('saveButton');
+            const container = document.querySelector('.container');
+            const sidebarEditIcon = document.getElementById('sidebarEditIcon');
+            const sidebarEditText = document.getElementById('sidebarEditText');
             
-            // Обновляем иконку
+            // Обновляем иконку и текст в боковом меню
             if (isEditMode) {
-                editIcon.classList.add('active');
                 saveButton.classList.add('visible');
+                container.classList.remove('readonly-mode');
+                sidebarEditIcon.textContent = '✏️';
+                sidebarEditText.textContent = 'Режим редактирования';
             } else {
-                editIcon.classList.remove('active');
                 saveButton.classList.remove('visible');
+                container.classList.add('readonly-mode');
+                sidebarEditIcon.textContent = '📖';
+                sidebarEditText.textContent = 'Режим чтения';
             }
             
             // Все поля ввода
@@ -1613,6 +2041,11 @@
             document.getElementById('subCategory').readOnly = !isEditMode;
             document.getElementById('filmDescription').readOnly = !isEditMode;
             document.getElementById('personalReview').readOnly = !isEditMode;
+            
+            // Новые поля
+            customTypeSelect.setDisabled(!isEditMode);
+            customStatusSelect.setDisabled(!isEditMode);
+            document.getElementById('lastEpisode').readOnly = !isEditMode;
             
             // Обновить кнопку добавления категории
             categoryAutocomplete.updateAddButton();
@@ -1846,7 +2279,10 @@
                 mainCategory: document.getElementById('mainCategory').value,
                 subCategory: document.getElementById('subCategory').value,
                 filmDescription: document.getElementById('filmDescription').value,
-                personalReview: document.getElementById('personalReview').value
+                personalReview: document.getElementById('personalReview').value,
+                contentType: document.getElementById('contentType').value,
+                watchStatus: document.getElementById('watchStatus').value,
+                lastEpisode: document.getElementById('lastEpisode').value
             };
 
             try {
@@ -1917,6 +2353,110 @@
 
         function goBack() {
             window.location.href = 'index1.html';
+        }
+
+        // Переключение режима редактирования из бокового меню
+        function toggleEditModeFromSidebar() {
+            toggleEditMode();
+        }
+
+        // Загрузка данных из API Кинопоиска
+        async function loadDataFromAPI() {
+            const title = document.getElementById('filmTitle').value.trim();
+            
+            if (!title) {
+                categoryAutocomplete.showNotification('Заполните название фильма', 'warning');
+                return;
+            }
+            
+            categoryAutocomplete.showNotification('Функция в разработке', 'warning');
+            
+            // TODO: Реализация загрузки через unofficial API Кинопоиска
+            // Пример: https://kinopoiskapiunofficial.tech/
+            /*
+            try {
+                const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${encodeURIComponent(title)}`, {
+                    headers: {
+                        'X-API-KEY': 'YOUR_API_KEY',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки данных');
+                }
+                
+                const data = await response.json();
+                
+                if (data.films && data.films.length > 0) {
+                    const film = data.films[0];
+                    
+                    // Заполнение данных
+                    customYearSelect.setValue(film.year);
+                    countryAutocomplete.setValue(film.countries[0]?.country || '');
+                    // и т.д.
+                    
+                    categoryAutocomplete.showNotification('Данные успешно загружены', 'success');
+                } else {
+                    categoryAutocomplete.showNotification('Фильм не найден', 'warning');
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных из API:', error);
+                categoryAutocomplete.showNotification('Ошибка загрузки данных', 'error');
+            }
+            */
+        }
+
+        // Очистка всех данных карточки
+        function clearAllData() {
+            if (!confirm('Вы уверены, что хотите очистить все данные карточки?')) {
+                return;
+            }
+            
+            // Включаем режим редактирования если выключен
+            if (!isEditMode) {
+                toggleEditMode();
+            }
+            
+            // Очищаем все поля
+            document.getElementById('filmTitle').value = '';
+            customYearSelect.setValue('');
+            countryAutocomplete.setValue('');
+            document.getElementById('director').value = '';
+            document.getElementById('cast').value = '';
+            document.getElementById('mainCategory').value = '';
+            document.getElementById('subCategory').value = '';
+            document.getElementById('filmDescription').value = '';
+            document.getElementById('personalReview').value = '';
+            customTypeSelect.setValue('');
+            customStatusSelect.setValue('');
+            document.getElementById('lastEpisode').value = '';
+            
+            // Сброс рейтинга
+            setRating(0);
+            
+            // Очистка изображений
+            document.getElementById('bannerPreview').style.display = 'none';
+            document.getElementById('bannerText').style.display = 'block';
+            document.getElementById('bannerInput').value = '';
+            
+            // Очистка превью
+            document.querySelectorAll('.preview-item').forEach((item, index) => {
+                const img = item.querySelector('img');
+                if (img) img.remove();
+                const text = item.querySelector('.preview-text');
+                if (text) text.style.display = 'block';
+                document.getElementById(`preview${index + 1}Input`).value = '';
+            });
+            
+            previewImages = [null, null, null];
+            
+            categoryAutocomplete.showNotification('Все данные очищены', 'success');
+        }
+
+        // Инициализация: устанавливаем режим чтения по умолчанию для существующих карточек
+        if (currentFilmId) {
+            document.querySelector('.container').classList.add('readonly-mode');
         }
     </script>
 </body>
