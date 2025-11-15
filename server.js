@@ -3,6 +3,8 @@ const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
 const multer = require('multer');
+const https = require('https');
+const http = require('http');
 
 const app = express();
 const PORT = 3000;
@@ -237,6 +239,94 @@ app.post('/api/films/:id/upload/preview/:previewNumber', uploadPreview.single('f
         res.json({ path: filePath, success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+// Функция для скачивания изображения из URL (с поддержкой редиректов)
+function downloadImage(url, redirectCount = 0) {
+    return new Promise((resolve, reject) => {
+        if (redirectCount > 5) {
+            reject(new Error('Too many redirects'));
+            return;
+        }
+        
+        const protocol = url.startsWith('https') ? https : http;
+        
+        protocol.get(url, (response) => {
+            // Обработка редиректов
+            if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+                console.log(`Redirect ${response.statusCode}: ${url} -> ${response.headers.location}`);
+                return downloadImage(response.headers.location, redirectCount + 1)
+                    .then(resolve)
+                    .catch(reject);
+            }
+            
+            if (response.statusCode !== 200) {
+                reject(new Error(`Failed to download image: ${response.statusCode}`));
+                return;
+            }
+            
+            const chunks = [];
+            response.on('data', (chunk) => chunks.push(chunk));
+            response.on('end', () => {
+                console.log(`Downloaded ${chunks.length} chunks, total size: ${Buffer.concat(chunks).length} bytes`);
+                resolve(Buffer.concat(chunks));
+            });
+            response.on('error', reject);
+        }).on('error', reject);
+    });
+}
+
+// API: Скачать изображение из URL и сохранить локально
+app.post('/api/films/:id/download-image', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { url, type, index } = req.body; // type: 'banner' или 'preview', index: 1,2,3 для превью
+        
+        if (!url) {
+            console.error('❌ URL не указан');
+            return res.status(400).json({ error: 'URL is required', success: false });
+        }
+        
+        console.log(`📥 [Film ${id}] Скачивание ${type}${index ? ` ${index}` : ''} из: ${url}`);
+        
+        // Скачиваем изображение
+        const imageBuffer = await downloadImage(url);
+        console.log(`✅ [Film ${id}] Изображение скачано, размер: ${imageBuffer.length} bytes`);
+        
+        // Определяем путь для сохранения
+        let uploadPath, filename;
+        if (type === 'banner') {
+            uploadPath = path.join(FILMS_DIR, id, 'banner');
+            filename = 'banner.webp';
+        } else if (type === 'preview' && index) {
+            uploadPath = path.join(FILMS_DIR, id, 'preview', `preview${index}`);
+            filename = 'preview.webp';
+        } else {
+            console.error('❌ Неверный тип или индекс:', { type, index });
+            return res.status(400).json({ error: 'Invalid type or index', success: false });
+        }
+        
+        console.log(`📁 [Film ${id}] Создание директории: ${uploadPath}`);
+        
+        // Создаем директорию если не существует
+        await ensureDir(uploadPath);
+        
+        // Очищаем старые файлы
+        await clearDirectory(uploadPath);
+        
+        // Сохраняем файл
+        const filePath = path.join(uploadPath, filename);
+        await fs.writeFile(filePath, imageBuffer);
+        
+        const relativePath = path.relative(__dirname, filePath);
+        console.log(`💾 [Film ${id}] Изображение сохранено: ${relativePath}`);
+        
+        res.json({ path: relativePath, success: true });
+    } catch (error) {
+        console.error(`❌ [Film ${id || 'unknown'}] Ошибка скачивания изображения:`, error.message);
+        console.error('Stack:', error.stack);
+        res.status(500).json({ error: error.message, success: false });
     }
 });
 
