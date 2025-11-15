@@ -98,7 +98,7 @@
         }
 
         .poster-section {
-            background: #212121;
+            background: #141414;
             border-radius: 12px;
             aspect-ratio: 16/9;
             display: flex;
@@ -261,6 +261,10 @@
             margin: auto;
         }
 
+        .poster-section img {
+            border-radius: 12px;
+        }
+
         input[type="file"] {
             position: absolute !important;
             width: 0 !important;
@@ -376,7 +380,7 @@
         }
 
         .star::after {
-            color: #FFD700;
+            color: #ff9d00;
             z-index: 2;
             clip-path: inset(0 100% 0 0);
             transition: clip-path 0.3s ease, transform 0.2s ease;
@@ -1224,7 +1228,7 @@
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
             color: #B8B8B8;
         }
@@ -1449,13 +1453,123 @@
                 overflow-y: auto !important;
             }
         }
+
+        /* Модальное окно для просмотра изображений */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            cursor: zoom-out;
+            animation: fadeIn 0.25s ease;
+            padding: 0;
+            margin: 0;
+        }
+
+        .image-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .image-modal-content {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            animation: zoomIn 0.25s ease;
+            cursor: default;
+            display: block;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .image-modal-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10001;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(5px);
+        }
+
+        .image-modal-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: rotate(90deg);
+        }
+
+        .image-modal-close::before,
+        .image-modal-close::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 2px;
+            background: #fff;
+            border-radius: 1px;
+        }
+
+        .image-modal-close::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .image-modal-close::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        /* Курсор для картинок в режиме чтения */
+        .poster-section.readonly.has-image,
+        .preview-item.readonly.has-image {
+            cursor: zoom-in;
+        }
+
+        .upload-preview[src] {
+            cursor: zoom-in;
+        }
     </style>
 </head>
 <body>
     <!-- Notification -->
     <div class="notification" id="notification">
-        <span class="notification-icon">✓</span>
+        <span class="notification-icon"></span>
         <span id="notificationText">Категория сохранена</span>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-modal-close" id="imageModalClose"></div>
+        <img class="image-modal-content" id="imageModalContent" src="" alt="">
     </div>
 
     <!-- Sidebar Menu Trigger -->
@@ -3021,14 +3135,61 @@
         function handlePosterClick() {
             if (isEditMode) {
                 document.getElementById('bannerInput').click();
+            } else {
+                // В режиме чтения - открыть изображение в модальном окне
+                const bannerPreview = document.getElementById('bannerPreview');
+                if (bannerPreview.style.display !== 'none' && bannerPreview.src) {
+                    openImageModal(bannerPreview.src);
+                }
             }
         }
 
         function handlePreviewClick(index) {
             if (isEditMode) {
                 document.getElementById(`preview${index + 1}Input`).click();
+            } else {
+                // В режиме чтения - открыть изображение в модальном окне
+                const previewItem = document.querySelectorAll('.preview-item')[index];
+                const previewImg = previewItem.querySelector('img');
+                if (previewImg && previewImg.src && previewImg.style.display !== 'none') {
+                    openImageModal(previewImg.src);
+                }
             }
         }
+
+        // Функции для модального окна просмотра изображений
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('imageModalContent');
+            modalImg.src = imageSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Отключаем прокрутку страницы
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Включаем прокрутку страницы
+        }
+
+        // Обработчики для модального окна
+        document.getElementById('imageModalClose').addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeImageModal();
+        });
+
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // Закрытие по клавише Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
 
         // Звёзды рейтинга (10-бальная система: половина звезды = 1 балл)
         document.querySelectorAll('.star').forEach((star, index) => {
@@ -3191,7 +3352,7 @@
                     img.style.width = '100%';
                     img.style.height = '100%';
                     img.style.maxHeight = 'none';
-                    img.style.objectFit = 'cover';
+                    img.style.objectFit = 'contain';
                     toggleExtraInfo(false); // Скрыть дополнительную информацию
                 } else if (aspectRatio >= 0.8 && aspectRatio <= 1.2) {
                     // Квадратное или близкое к квадрату изображение
@@ -3201,7 +3362,7 @@
                     img.style.width = '100%';
                     img.style.height = '100%';
                     img.style.maxHeight = 'none';
-                    img.style.objectFit = 'cover';
+                    img.style.objectFit = 'contain';
                     toggleExtraInfo(true); // Показать дополнительную информацию
                 } else if (aspectRatio > 1.2 && aspectRatio < 1.6) {
                     // Умеренно горизонтальное (4:3 и похожие)
@@ -3211,7 +3372,7 @@
                     img.style.width = '100%';
                     img.style.height = '100%';
                     img.style.maxHeight = 'none';
-                    img.style.objectFit = 'cover';
+                    img.style.objectFit = 'contain';
                     toggleExtraInfo(true); // Показать дополнительную информацию
                 } else {
                     // Широкое горизонтальное изображение (16:9 и шире)
@@ -3229,6 +3390,7 @@
             img.src = src;
             img.style.display = 'block';
             document.getElementById('bannerText').style.display = 'none';
+            posterSection.classList.add('has-image'); // Добавляем класс для курсора zoom-in
         }
 
         // Управление высотой превью и видимостью дополнительной информации
@@ -3280,6 +3442,9 @@
             // Скрыть текст
             const text = item.querySelector('.preview-text');
             if (text) text.style.display = 'none';
+            
+            // Добавляем класс для курсора zoom-in
+            item.classList.add('has-image');
         }
 
         // Сохранение фильма
@@ -3573,16 +3738,27 @@
                 return;
             }
             
-            // Запросить API ключ у пользователя
-            const apiKey = prompt('Введите ваш API ключ с https://kinopoiskapiunofficial.tech/\n\n(Если у вас нет ключа, зарегистрируйтесь на сайте)', localStorage.getItem('kinopoiskApiKey') || '');
+            // Проверить наличие сохраненного API ключа
+            let apiKey = localStorage.getItem('kinopoiskApiKey');
+            let needsApiKey = !apiKey;
             
-            if (!apiKey) {
-                categoryAutocomplete.showNotification('API ключ не указан', 'warning');
-                return;
+            // Функция для запроса API ключа
+            const requestApiKey = () => {
+                const key = prompt('Введите ваш API ключ с https://kinopoiskapiunofficial.tech/\n\n(Если у вас нет ключа, зарегистрируйтесь на сайте)', apiKey || '');
+                if (!key) {
+                    categoryAutocomplete.showNotification('API ключ не указан', 'warning');
+                    return null;
+                }
+                return key;
+            };
+            
+            // Если ключа нет, запросить его
+            if (needsApiKey) {
+                apiKey = requestApiKey();
+                if (!apiKey) return;
+                // Сохранить ключ для будущего использования
+                localStorage.setItem('kinopoiskApiKey', apiKey);
             }
-            
-            // Сохранить ключ для будущего использования
-            localStorage.setItem('kinopoiskApiKey', apiKey);
             
             categoryAutocomplete.showNotification('Загрузка данных...', 'success');
             
@@ -3596,9 +3772,20 @@
                 });
                 
                 if (!searchResponse.ok) {
-                    if (searchResponse.status === 401) {
+                    if (searchResponse.status === 401 || searchResponse.status === 403) {
+                        // Ошибка авторизации - удаляем старый ключ и запрашиваем новый
                         localStorage.removeItem('kinopoiskApiKey');
-                        throw new Error('Неверный API ключ');
+                        categoryAutocomplete.showNotification('API ключ недействителен или истек. Введите новый ключ.', 'warning');
+                        
+                        // Запросить новый ключ
+                        apiKey = requestApiKey();
+                        if (!apiKey) return;
+                        
+                        // Сохранить и повторить попытку
+                        localStorage.setItem('kinopoiskApiKey', apiKey);
+                        
+                        // Рекурсивно вызвать функцию с новым ключом
+                        return loadDataFromAPI();
                     }
                     throw new Error('Ошибка поиска фильма');
                 }
