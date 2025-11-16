@@ -2,17 +2,17 @@
 
 
 
-<img src="title_assets/images/assets/images/logo.png" width="2000"/>
+<img src="\assets\images\title_logo.png" width="2000"/>
 
   
 # Менеджер коллекции фильмов и сериалов
 
 
-[English](README_EN.md) | **Русский**
+[English](\docs\README_EN.md) | **Русский**
 
-[![Telegram](https://img.shields.io/badge/Telegram-Contact-blue?style=for-the-badge&logo=telegram)](https://t.me/flexiy1)
+[![Telegram](https://img.shields.io/badge/Telegram-Contact-blue?style=for-the-badge&logo=telegram)](https://t.me/deoopid_co)
 
-[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](docs\LICENSE)
 
 
 
@@ -28,7 +28,7 @@
 
 <div align="center">
 
-![Demo](assets/images/assets/images/demo.gif)
+![Demo](/assets/images/demo.gif)
 
 *Основной функционал приложения*
 
@@ -67,9 +67,9 @@
 
 # Клонировать репозиторий
 
-git clone https://github.com/FLEXIY0/------.git
+git clone https://github.com/FLEXIY0/KinoTeka-watchlist.git
 
-cd ------
+cd KinoTeka-watchlist
 
   
 
@@ -87,7 +87,7 @@ npm start
 
   
 
-**Windows:** запустите `start_app.bat`  
+**Windows:** запустите `start_app.bat` или `start.bat`  
 
 **Linux/macOS:** запустите `./start.sh`
 
@@ -164,7 +164,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 Для коммерческого использования свяжитесь с автором.
 
-Подробнее: [LICENSE](LICENSE)
+Подробнее: [LICENSE](docs\LICENSE)
 
   
 
@@ -180,7 +180,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
   
 
-[![Star History Chart](https://api.star-history.com/svg?repos=FLEXIY0/------&type=Date)](https://star-history.com/#FLEXIY0/------&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=Date)](https://star-history.com/#FLEXIY0/KinoTeka-watchlist&Date)
 
   
 
@@ -200,7 +200,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 **Crypto donations:**
 
-<img src="assets/images/assets/images/crypto_qr.jpg" alt="Crypto QR" width="200"/>
+<img src="/assets/images/crypto_qr.jpg" alt="Crypto QR" width="200"/>
 
 ```
 BTC: 
