@@ -153,11 +153,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 ---
 
-  
-
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:fleeeeexiy@gmail.com)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/FLEXIY0)
-
+[![Star History Chart](https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left)](https://www.star-history.com/#FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left)
 ---
 
 ## Поддержать проект
