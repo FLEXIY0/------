@@ -10,6 +10,9 @@
 
 [English](\docs\README_EN.md) | **Русский**
 
+
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/droopi_co)
+
 [![Telegram](https://img.shields.io/badge/Telegram-Contact-blue?style=for-the-badge&logo=telegram)](https://t.me/deoopid_co)
 
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](docs\LICENSE)
@@ -188,7 +191,6 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
   
 
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/flexiy1)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:fleeeeexiy@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/FLEXIY0)
 
@@ -198,17 +200,17 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 <div align="center">
 
-**Crypto donations:**
+**donations:**
 
 <img src="/assets/images/crypto_qr.jpg" alt="Crypto QR" width="200"/>
 
 ```
-BTC: 
-ETH: 
+BTC: 1HjxBMDShSb6xeLKSQHwpCeh1yg6j2h8gu
+ETH (ERC20): 0xb75c84cf2e189f9be3870a3f8d5e051dab9f8b75
 USDT (TON): UQBKOgHmj3jEfj4ff7mzL3MlR13CvJH8vD9u-T4i2PcpkpZa
 ```
 
-**Contact:** [@flexiy1](https://t.me/flexiy1) | fleeeeexiy@gmail.com
+**Contact:** [@flexiy1](https://t.me/flexiy1)
 
 *Ваша поддержка помогает развивать проект*
 
