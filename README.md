@@ -1,13 +1,3 @@
-## Star History
-
-<a href="https://www.star-history.com/#FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left" />
- </picture>
-</a><div align="center">
-
 
 
 <img src="\assets\images\title_logo.png" width="2000"/>
@@ -159,7 +149,15 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 ---
 
-[![Star History Chart](https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left)](https://www.star-history.com/#FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left)
+## Star History
+
+<a href="https://www.star-history.com/#FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=date&legend=top-left" />
+ </picture>
+</a><div align="center">
 ---
 
 ## Поддержать проект
