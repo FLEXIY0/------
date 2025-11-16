@@ -1,17 +1,14 @@
 <div align="center">
 
-# KINOTEKA
+
+
+<img src="title_logo.png" width="2000"/>
 
   
-
-<img src="/title_logo.png"KINOTEKA Logo" width="200"/>
-
-  
-
-### Менеджер коллекции фильмов и сериалов
+# Менеджер коллекции фильмов и сериалов
 
 
-  
+[English](README_EN.md) | **Русский**
 [![Telegram](https://img.shields.io/badge/Telegram-Contact-blue?style=for-the-badge&logo=telegram)](https://t.me/flexiy1)
 
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](LICENSE)
@@ -69,9 +66,9 @@
 
 # Клонировать репозиторий
 
-git clone https://github.com/yourusername/kinoteka.git
+git clone https://github.com/FLEXIY0/------.git
 
-cd kinoteka
+cd ------
 
   
 
@@ -182,7 +179,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
   
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/kinoteka&type=Date)](https://star-history.com/#yourusername/kinoteka&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=FLEXIY0/------&type=Date)](https://star-history.com/#FLEXIY0/------&Date)
 
   
 
@@ -192,7 +189,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/flexiy1)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:fleeeeexiy@gmail.com)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yourusername)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/FLEXIY0)
 
 ---
 
@@ -202,12 +199,12 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 **Crypto donations:**
 
-<img src="crypto_qr.png" alt="Crypto QR" width="200"/>
+<img src="crypto_qr.jpg" alt="Crypto QR" width="200"/>
 
 ```
-BTC: your_btc_address_here
-ETH: your_eth_address_here
-USDT (TRC20): your_usdt_address_here
+BTC: 
+ETH: 
+USDT (TON): UQBKOgHmj3jEfj4ff7mzL3MlR13CvJH8vD9u-T4i2PcpkpZa
 ```
 
 **Contact:** [@flexiy1](https://t.me/flexiy1) | fleeeeexiy@gmail.com
@@ -218,7 +215,7 @@ USDT (TRC20): your_usdt_address_here
 
 ---
 
-**Сделано для любителей кино**
+**Сделано любителем кино для любителей кино**
 
   
 
