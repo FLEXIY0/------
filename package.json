@@ -5,9 +5,32 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "app": "node app_launcher.js",
+    "build:exe": "pkg app_launcher.js -t node18-win-x64 -o FilmsManager.exe",
+    "build:exe-small": "pkg app_launcher.js -t node18-win-x64 -o FilmsManager.exe --compress GZip",
+    "build:server-exe": "pkg server.js -t node18-win-x64 -o FilmsServer.exe"
   },
-  "keywords": [],
+  "bin": {
+    "films-manager": "app_launcher.js"
+  },
+  "pkg": {
+    "assets": [
+      "*.html",
+      "*.css",
+      "*.js",
+      "themes/**/*",
+      "settings.json",
+      "КАК_ИСПОЛЬЗОВАТЬ_ТЕМЫ.txt"
+    ],
+    "outputPath": "dist"
+  },
+  "keywords": [
+    "films",
+    "series",
+    "manager",
+    "desktop-app"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -16,7 +39,8 @@
     "cors": "^2.8.5"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "pkg": "^5.8.1"
   }
 }
 

@@ -1,7 +1,36 @@
+# Dependencies
 node_modules/
-films_and_serials/
-ALL_CATEGORIES/
-*.log
-.DS_Store
 package-lock.json
 
+# Database files
+films.json
+categories.json
+
+# User data
+posters/*
+!posters/.gitkeep
+settings.json
+!settings.example.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build output
+dist/
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+.server.pid

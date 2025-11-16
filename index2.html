@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Фильмы и Сериалы - Просмотренные</title>
+    <title>KINOTEKA</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="theme-manager.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
@@ -623,6 +624,43 @@
             color: var(--text-primary, #B8B8B8);
         }
 
+        .upload-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .upload-actions .upload-btn {
+            flex: 1;
+        }
+
+        .clear-upload-btn {
+            flex: 0 0 auto;
+            width: auto;
+            padding: 10px 16px;
+            background: transparent;
+            color: var(--text-secondary, #9E9E9E);
+            border: 2px solid var(--border-color, #3e3e3e);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clear-upload-btn:hover {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+        }
+
+        .clear-upload-btn .material-symbols-outlined {
+            font-size: 18px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -701,7 +739,12 @@
                     <span class="upload-placeholder">Выберите изображение</span>
                 </div>
                 <input type="file" id="backgroundInput" accept="image/*" style="display: none;">
+                <div class="upload-actions">
                 <button class="upload-btn" id="backgroundBtn">Выбрать фон</button>
+                    <button class="clear-upload-btn" id="clearBackgroundBtn" title="Очистить фон">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Загрузка иконки -->
@@ -711,7 +754,12 @@
                     <span class="upload-placeholder">Выберите иконку</span>
                 </div>
                 <input type="file" id="iconInput" accept="image/*" style="display: none;">
+                <div class="upload-actions">
                 <button class="upload-btn" id="iconBtn">Выбрать иконку</button>
+                    <button class="clear-upload-btn" id="clearIconBtn" title="Очистить иконку">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
             </div>
 
             <div id="error-message" class="error-message" style="display: none;"></div>
@@ -876,9 +924,11 @@
         const backgroundInput = document.getElementById('backgroundInput');
         const backgroundBtn = document.getElementById('backgroundBtn');
         const backgroundPreview = document.getElementById('backgroundPreview');
+        const clearBackgroundBtn = document.getElementById('clearBackgroundBtn');
         const iconInput = document.getElementById('iconInput');
         const iconBtn = document.getElementById('iconBtn');
         const iconPreview = document.getElementById('iconPreview');
+        const clearIconBtn = document.getElementById('clearIconBtn');
 
         // Переменные для хранения выбранных изображений
         let selectedBackground = null;
@@ -1070,6 +1120,21 @@
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        // Обработчики кнопок очистки
+        clearBackgroundBtn.addEventListener('click', function() {
+            selectedBackground = null;
+            backgroundPreview.style.backgroundImage = '';
+            backgroundPreview.classList.remove('has-image');
+            backgroundInput.value = '';
+        });
+
+        clearIconBtn.addEventListener('click', function() {
+            selectedIcon = null;
+            iconPreview.style.backgroundImage = '';
+            iconPreview.classList.remove('has-image');
+            iconInput.value = '';
         });
 
         // Обработчик клика по кнопке отмены добавления/редактирования

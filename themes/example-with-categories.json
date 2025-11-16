@@ -1,0 +1,50 @@
+{
+  "theme": {
+    "backgroundColor": "#0d1117",
+    "backgroundType": "solid",
+    "gradientColor1": "#0d1117",
+    "gradientColor2": "#1f2937",
+    "gradientAngle": 135,
+    "gradientPosition1": 0,
+    "gradientPosition2": 100,
+    "backgroundImage": null,
+    "primaryColor": "#161b22",
+    "secondaryColor": "#1f2937",
+    "accentColor": "#374151",
+    "hoverColor": "#4b5563",
+    "activeColor": "#6b7280",
+    "buttonColor": "#374151",
+    "buttonHover": "#6b7280",
+    "buttonTextColor": "#8b949e",
+    "buttonTextHover": "#e8ecf5",
+    "textPrimary": "#c9d1d9",
+    "textSecondary": "#8b949e",
+    "textTertiary": "#6e7681",
+    "textMuted": "#484f58",
+    "textHover": "#ffffff",
+    "borderColor": "#30363d",
+    "borderHover": "#58a6ff",
+    "starEmpty": "#30363d",
+    "starFilled": "#f0ad4e",
+    "fontFamily": "Inter, sans-serif",
+    "fontSize": "16px"
+  },
+  "categories": [
+    {
+      "name": "Пример Аниме",
+      "background": null,
+      "icon": null
+    },
+    {
+      "name": "Пример Фильмы",
+      "background": null,
+      "icon": null
+    }
+  ],
+  "metadata": {
+    "exportDate": "2024-11-16T12:00:00.000Z",
+    "version": "1.0",
+    "description": "Пример темы с категориями. Замените icon и background на реальные Base64 изображения."
+  }
+}
+

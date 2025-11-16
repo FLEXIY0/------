@@ -1,0 +1,36 @@
+{
+  "title": "Враг",
+  "rating": 8,
+  "year": "2013",
+  "country": "Франция",
+  "director": "Дени Вильнёв",
+  "cast": "Джейк Джилленхол, Мелани Лоран, Сара Гадон, Изабелла Росселлини, Джошуа Пис",
+  "mainCategory": "Триллер",
+  "subCategories": [
+    "Драма"
+  ],
+  "filmDescription": "Взяв по совету коллеги фильм в прокате, преподаватель истории по имени Адам Белл с удивлением замечает в эпизодической роли актёра, который похож на него как две капли воды. Желание найти своего двойника превращается для парня в навязчивую идею, что становится причиной странных событий, постепенно погружающих его в пучину безумия.",
+  "personalReview": "Неплохо, даже порой чувствую себя этим персонажем, думаю стоит писать личный отзыв сразу же после прочтения а ни позже",
+  "contentType": "movie",
+  "watchStatus": "watched",
+  "lastEpisode": "",
+  "createdAt": "2025-11-16T01:01:40.262Z",
+  "kinopoiskRating": "6.6",
+  "imdbRating": "6.9",
+  "votesCount": "125.2K",
+  "reviewsCount": "6.6",
+  "bannerUrl": "films_and_serials\\4\\banner\\banner.webp",
+  "previewUrls": [
+    "films_and_serials\\4\\preview\\preview1\\preview.webp",
+    "films_and_serials\\4\\preview\\preview2\\preview.webp",
+    "films_and_serials\\4\\preview\\preview3\\preview.webp"
+  ],
+  "kinopoiskUrl": "https://www.kinopoisk.ru/film/673910/",
+  "imdbUrl": "https://www.imdb.com/title/tt2316411/",
+  "duration": "1ч 28мин",
+  "ageRating": "18+",
+  "slogan": "Опасайся встречи с самим собой...",
+  "budget": null,
+  "interestingFacts": "Гигантский паук, идущий по городу — отсылка к монументальной скульптуре <a href=\"/name/1125291/\" class=\"all\">Луизы Буржуа</a> «Мама» (Maman).<br><br>Экранизация романа <a href=\"/name/696098/\" class=\"all\">Жозе Сарамаго</a> «Двойник» (O Homem Duplicado, 2002).<br><br>По словам режиссера <a href=\"/name/415350/\" class=\"all\">Дени Вильнёва</a>, главную роль предлагали <a href=\"/name/14799/\" class=\"all\">Хавьеру Бардему</a>, но актер посчитал, что он не подходит для такой роли. Также главную роль предлагали <a href=\"/name/21495/\" class=\"all\">Кристиану Бэйлу</a>, но тот был вынужден отказаться из-за несогласованности рабочих графиков с другими его проектами.",
+  "updatedAt": "2025-11-16T01:02:17.884Z"
+}

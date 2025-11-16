@@ -857,6 +857,36 @@ class ThemeManager {
                         </div>
 
                         <div class="theme-color-group">
+                            <div class="theme-color-group-title">Обводка и границы</div>
+                            
+                            <div class="theme-color-item-v2">
+                                <div class="theme-color-preview-wrapper">
+                                    <div class="theme-color-preview" id="preview-borderColor" style="border: 2px solid ${this.currentTheme.borderColor || '#3e3e3e'}; padding: 8px;">
+                                        <div style="color: var(--text-primary); font-size: 12px;">Обводка</div>
+                                    </div>
+                                </div>
+                                <div class="theme-color-info">
+                                    <label>Цвет обводки</label>
+                                    <span class="theme-color-hint">Рамки карточек и элементов</span>
+                                </div>
+                                <input type="color" id="borderColor" value="${this.currentTheme.borderColor || '#3e3e3e'}" oninput="themeManager.updateBorderColor('borderColor', this.value)" />
+                            </div>
+
+                            <div class="theme-color-item-v2">
+                                <div class="theme-color-preview-wrapper">
+                                    <div class="theme-color-preview" id="preview-borderHover" style="border: 2px solid ${this.currentTheme.borderHover || '#4e4e4e'}; padding: 8px;">
+                                        <div style="color: var(--text-primary); font-size: 12px;">При наведении</div>
+                                    </div>
+                                </div>
+                                <div class="theme-color-info">
+                                    <label>Hover обводки</label>
+                                    <span class="theme-color-hint">Цвет рамки при наведении</span>
+                                </div>
+                                <input type="color" id="borderHover" value="${this.currentTheme.borderHover || '#4e4e4e'}" oninput="themeManager.updateBorderColor('borderHover', this.value)" />
+                            </div>
+                        </div>
+
+                        <div class="theme-color-group">
                             <div class="theme-color-group-title">Рейтинг</div>
                             
                             <div class="theme-color-item-v2">
@@ -976,6 +1006,8 @@ class ThemeManager {
             buttonHover: 'buttonHover',
             buttonTextColor: 'buttonTextColor',
             buttonTextHover: 'buttonTextHover',
+            borderColor: 'borderColor',
+            borderHover: 'borderHover',
             textPrimary: 'textPrimary',
             textSecondary: 'textSecondary',
             textTertiary: 'textTertiary',
@@ -1004,6 +1036,8 @@ class ThemeManager {
             } else if (inputId === 'buttonHover') {
                 const button = preview.querySelector('.theme-preview-button-hover');
                 if (button) button.style.background = color;
+            } else if (inputId === 'borderColor' || inputId === 'borderHover') {
+                preview.style.borderColor = color;
             } else {
                 preview.style.background = color;
             }
@@ -1055,7 +1089,11 @@ class ThemeManager {
                 throw new Error('Не удалось загрузить тему');
             }
 
-            const themeData = await response.json();
+            const importData = await response.json();
+            
+            // Определяем формат (новый с категориями или старый)
+            const themeData = importData.theme || importData;
+            const categories = importData.categories || [];
             
             // Валидация темы
             if (!this.validateTheme(themeData)) {
@@ -1075,7 +1113,13 @@ class ThemeManager {
                 }
             });
 
-            this.showNotification('Тема успешно импортирована! Не забудьте сохранить.', 'success');
+            // Восстанавливаем категории, если они есть
+            if (categories.length > 0) {
+                await this.restoreCategories(categories);
+                this.showNotification(`Тема импортирована! (${categories.length} категорий восстановлено)`, 'success');
+            } else {
+                this.showNotification('Тема успешно импортирована! Не забудьте сохранить.', 'success');
+            }
         } catch (error) {
             console.error('Ошибка импорта темы:', error);
             this.showNotification(`Ошибка импорта: ${error.message}`, 'error');
@@ -1097,18 +1141,134 @@ class ThemeManager {
         return true;
     }
 
-    exportTheme() {
-        const themeJSON = JSON.stringify(this.currentTheme, null, 2);
-        const blob = new Blob([themeJSON], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'my-theme.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        this.showNotification('Тема экспортирована!', 'success');
+    async exportTheme() {
+        try {
+            this.showNotification('Подготовка темы к экспорту...', 'info');
+            
+            // Загружаем категории с сервера
+            const categories = await this.getCategoriesForExport();
+            
+            // Создаем объект для экспорта с темой и категориями
+            const exportData = {
+                theme: this.currentTheme,
+                categories: categories,
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    version: '1.0'
+                }
+            };
+            
+            const themeJSON = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([themeJSON], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-theme.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            this.showNotification(`Тема экспортирована! (${categories.length} категорий)`, 'success');
+        } catch (error) {
+            console.error('Ошибка экспорта темы:', error);
+            this.showNotification('Ошибка экспорта темы', 'error');
+        }
+    }
+
+    async getCategoriesForExport() {
+        try {
+            const response = await fetch(`${this.API_URL}/categories`);
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки категорий');
+            }
+            const categories = await response.json();
+            
+            // Фильтруем только категории с иконками или фонами
+            return categories.filter(cat => {
+                if (typeof cat === 'string') return false;
+                return cat.background || cat.icon;
+            });
+        } catch (error) {
+            console.error('Ошибка загрузки категорий:', error);
+            return [];
+        }
+    }
+
+    async restoreCategories(categories) {
+        try {
+            this.showNotification(`Восстановление категорий (${categories.length})...`, 'info');
+            
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (const category of categories) {
+                try {
+                    // Проверяем, существует ли категория
+                    const existingCategories = await fetch(`${this.API_URL}/categories`).then(r => r.json());
+                    const exists = existingCategories.some(cat => {
+                        const name = typeof cat === 'string' ? cat : cat.name;
+                        return name === category.name;
+                    });
+                    
+                    if (exists) {
+                        // Обновляем существующую категорию
+                        const response = await fetch(`${this.API_URL}/categories/${encodeURIComponent(category.name)}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name: category.name,
+                                background: category.background,
+                                icon: category.icon
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            successCount++;
+                        } else {
+                            errorCount++;
+                        }
+                    } else {
+                        // Создаем новую категорию
+                        const response = await fetch(`${this.API_URL}/categories`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name: category.name,
+                                background: category.background,
+                                icon: category.icon
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            successCount++;
+                        } else {
+                            errorCount++;
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Ошибка восстановления категории ${category.name}:`, error);
+                    errorCount++;
+                }
+            }
+            
+            if (errorCount > 0) {
+                this.showNotification(`Восстановлено: ${successCount}, ошибок: ${errorCount}`, 'warning');
+            }
+            
+            // Обновляем страницу, если мы на странице категорий
+            if (typeof renderCategories === 'function') {
+                await renderCategories();
+            }
+            
+        } catch (error) {
+            console.error('Ошибка восстановления категорий:', error);
+            this.showNotification('Ошибка восстановления категорий', 'error');
+        }
     }
 
     showNotification(message, type = 'success') {
@@ -1258,6 +1418,16 @@ class ThemeManager {
         this.applyTheme();
     }
 
+    updateBorderColor(type, color) {
+        this.currentTheme[type] = color;
+        const preview = document.getElementById(`preview-${type}`);
+        if (preview) {
+            preview.style.borderColor = color;
+        }
+        this.applyTheme();
+        this.showNotification(`Цвет обводки обновлён: ${color}`, 'success');
+    }
+
     updateFont(property, value) {
         this.currentTheme[property] = value;
         this.applyTheme();
@@ -1269,14 +1439,18 @@ class ThemeManager {
         this.applyTheme();
     }
 
-    importThemeFromFile(event) {
+    async importThemeFromFile(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             try {
-                const themeData = JSON.parse(e.target.result);
+                const importData = JSON.parse(e.target.result);
+                
+                // Определяем формат (новый с категориями или старый)
+                const themeData = importData.theme || importData;
+                const categories = importData.categories || [];
                 
                 if (!this.validateTheme(themeData)) {
                     throw new Error('Некорректный формат темы');
@@ -1295,7 +1469,13 @@ class ThemeManager {
                     }
                 });
 
-                this.showNotification('Тема загружена! Не забудьте сохранить.', 'success');
+                // Восстанавливаем категории, если они есть
+                if (categories.length > 0) {
+                    await this.restoreCategories(categories);
+                    this.showNotification(`Тема загружена! (${categories.length} категорий восстановлено)`, 'success');
+                } else {
+                    this.showNotification('Тема загружена! Не забудьте сохранить.', 'success');
+                }
             } catch (error) {
                 console.error('Ошибка загрузки темы:', error);
                 this.showNotification(`Ошибка: ${error.message}`, 'error');
