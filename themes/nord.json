@@ -1,0 +1,19 @@
+{
+  "name": "Nord",
+  "author": "Theme System",
+  "description": "Nord - холодная северная палитра",
+  "backgroundColor": "#2e3440",
+  "primaryColor": "#3b4252",
+  "secondaryColor": "#434c5e",
+  "accentColor": "#4c566a",
+  "hoverColor": "#5e6c8a",
+  "activeColor": "#70829a",
+  "textPrimary": "#eceff4",
+  "textSecondary": "#d8dee9",
+  "textTertiary": "#b8c0d0",
+  "textMuted": "#8892a8",
+  "textHover": "#ffffff",
+  "borderColor": "#88c0d0",
+  "borderHover": "#8fbcbb"
+}
+

@@ -395,7 +395,7 @@ app.get('/api/categories', async (req, res) => {
 // API: Добавить категорию
 app.post('/api/categories', async (req, res) => {
     try {
-        const { name } = req.body;
+        const { name, background, icon } = req.body;
         
         if (!name || !name.trim()) {
             return res.status(400).json({ error: 'Название категории обязательно' });
@@ -404,15 +404,63 @@ app.post('/api/categories', async (req, res) => {
         const categories = await getAllCategories();
         const trimmedName = name.trim();
         
-        // Проверка на дубликат
-        if (categories.find(c => c.toLowerCase() === trimmedName.toLowerCase())) {
+        // Проверка на дубликат (учитываем оба формата)
+        const isDuplicate = categories.some(c => {
+            const catName = typeof c === 'string' ? c : c.name;
+            return catName.toLowerCase() === trimmedName.toLowerCase();
+        });
+        
+        if (isDuplicate) {
             return res.status(409).json({ error: 'Категория уже существует' });
         }
         
-        categories.push(trimmedName);
+        // Создаем объект категории (новый формат)
+        const newCategory = {
+            name: trimmedName,
+            background: background || null,
+            icon: icon || null
+        };
+        
+        categories.push(newCategory);
         await saveCategories(categories);
         
-        res.json({ success: true, categories });
+        res.json({ success: true, category: newCategory, categories });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// API: Обновить категорию
+app.put('/api/categories/:name', async (req, res) => {
+    try {
+        const { name } = req.params;
+        const decodedName = decodeURIComponent(name);
+        const { background, icon } = req.body;
+        
+        const categories = await getAllCategories();
+        
+        // Находим и обновляем категорию
+        const updatedCategories = categories.map(cat => {
+            const catName = typeof cat === 'string' ? cat : cat.name;
+            if (catName === decodedName) {
+                // Обновляем категорию
+                return {
+                    name: catName,
+                    background: background || null,
+                    icon: icon || null
+                };
+            }
+            return cat;
+        });
+        
+        await saveCategories(updatedCategories);
+        
+        const updatedCategory = updatedCategories.find(c => {
+            const catName = typeof c === 'string' ? c : c.name;
+            return catName === decodedName;
+        });
+        
+        res.json({ success: true, category: updatedCategory, categories: updatedCategories });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -422,8 +470,14 @@ app.post('/api/categories', async (req, res) => {
 app.delete('/api/categories/:name', async (req, res) => {
     try {
         const { name } = req.params;
+        const decodedName = decodeURIComponent(name);
         const categories = await getAllCategories();
-        const filtered = categories.filter(c => c !== decodeURIComponent(name));
+        
+        // Фильтруем с учетом обоих форматов (строки и объекты)
+        const filtered = categories.filter(c => {
+            const catName = typeof c === 'string' ? c : c.name;
+            return catName !== decodedName;
+        });
         
         await saveCategories(filtered);
         

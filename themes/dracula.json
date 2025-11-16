@@ -1,0 +1,19 @@
+{
+  "name": "Dracula",
+  "author": "Theme System",
+  "description": "Популярная Dracula тема для редакторов",
+  "backgroundColor": "#282a36",
+  "primaryColor": "#323446",
+  "secondaryColor": "#44475a",
+  "accentColor": "#5a5e7a",
+  "hoverColor": "#6a6e8a",
+  "activeColor": "#7a7e9a",
+  "textPrimary": "#f8f8f2",
+  "textSecondary": "#e0e0da",
+  "textTertiary": "#c8c8c2",
+  "textMuted": "#909088",
+  "textHover": "#ffffff",
+  "borderColor": "#bd93f9",
+  "borderHover": "#ff79c6"
+}
+

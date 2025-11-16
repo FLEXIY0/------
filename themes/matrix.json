@@ -1,0 +1,19 @@
+{
+  "name": "Matrix",
+  "author": "Theme System",
+  "description": "Зеленая тема в стиле фильма Матрица",
+  "backgroundColor": "#0d0d0d",
+  "primaryColor": "#0f1f0f",
+  "secondaryColor": "#132f13",
+  "accentColor": "#1a3f1a",
+  "hoverColor": "#234f23",
+  "activeColor": "#2d5f2d",
+  "textPrimary": "#00ff00",
+  "textSecondary": "#00cc00",
+  "textTertiary": "#009900",
+  "textMuted": "#006600",
+  "textHover": "#66ff66",
+  "borderColor": "#00ff00",
+  "borderHover": "#66ff66"
+}
+

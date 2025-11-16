@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Фильмы и Сериалы - Просмотренные</title>
+    <link rel="stylesheet" href="theme-manager.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&family=Lato:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
 
         * {
             margin: 0;
@@ -14,11 +15,11 @@
         }
 
         body {
-            font-family: "Inter", sans-serif;
+            font-family: "Nunito", sans-serif;
             font-optical-sizing: auto;
             font-weight: 400;
             font-style: normal;
-            background: #141414;
+            background: var(--bg-primary, #141414);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -41,7 +42,7 @@
             position: relative;
             width: 80px;
             height: 80px;
-            background: #212121;
+            background: var(--bg-secondary, #212121);
             border-radius: 8px;
             display: flex;
             justify-content: center;
@@ -49,13 +50,14 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
-            position: relative;
+            color: var(--text-secondary, #9E9E9E);
         }
 
         .tile:hover {
-            border-color: #323232;
+            border-color: var(--border-hover, #323232);
             box-shadow: 0 4px 12px rgba(55, 55, 55, 0.3);
             transform: scale(1.05);
+            color: var(--text-primary, #B8B8B8);
         }
 
 
@@ -64,8 +66,8 @@
             top: -40px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(62, 62, 62, 0.9);
-            color: #9E9E9E;
+            background: var(--bg-accent, rgba(62, 62, 62, 0.9));
+            color: var(--text-secondary, #9E9E9E);
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -74,6 +76,7 @@
             visibility: hidden;
             transition: all 0.2s ease;
             pointer-events: none;
+            z-index: 10;
         }
 
         .tile:hover .tile-label {
@@ -81,12 +84,27 @@
             visibility: visible;
         }
 
+        /* Иконка на плитке */
+        .tile-icon {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
         /* Три точки для плитки меню */
         .tile:last-child::before {
             content: '•••';
             font-size: 30px;
             font-weight: 400;
-            color: #9E9E9E;
+            color: inherit;
             line-height: 1;
             text-align: center;
             display: flex;
@@ -101,7 +119,7 @@
             top: 0;
             width: 300px;
             height: 100%;
-            background: #212121;
+            background: var(--bg-secondary, #212121);
             transform: translateX(-100%);
             transition: transform 0.4s ease-out;
             z-index: 5;
@@ -118,10 +136,10 @@
         .sidebar-header {
             font-size: 24px;
             font-weight: 400;
-            color: #9E9E9E;
+            color: var(--text-secondary, #9E9E9E);
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #323232;
+            border-bottom: 2px solid var(--border-color, #323232);
         }
 
         .sidebar-menu {
@@ -134,11 +152,11 @@
         .sidebar-menu li {
             padding: 12px 15px;
             margin-bottom: 8px;
-            background: #3e3e3e;
-            color: #9E9E9E;
+            background: var(--bg-accent, #3e3e3e);
+            color: var(--text-secondary, #9E9E9E);
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
             position: relative;
             display: flex;
             justify-content: space-between;
@@ -146,21 +164,58 @@
         }
 
         .sidebar-menu li:hover {
-            background: #323232;
+            background: var(--bg-hover, #323232);
+            color: var(--text-primary, #B8B8B8);
         }
 
-        .delete-btn {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: #9E9E9E;
+        .category-actions {
+            display: flex;
+            gap: 8px;
             opacity: 0;
             transition: opacity 0.2s ease;
         }
 
-        .sidebar-menu li:hover .delete-btn {
+        .sidebar-menu li:hover .category-actions {
             opacity: 1;
+        }
+
+        .edit-btn, .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary, #9E9E9E);
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            font-size: 18px;
+        }
+
+        .edit-btn .material-symbols-outlined {
+            font-size: 18px;
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 20;
+        }
+
+        .edit-btn:hover {
+            color: var(--star-filled, #ffcc80);
+        }
+
+        .delete-btn {
+            font-size: 18px;
+        }
+
+        .delete-btn:hover {
+            color: var(--star-filled, #ff6b6b);
         }
 
         /* Кнопка добавления в сайдбаре */
@@ -172,8 +227,8 @@
         .sidebar-add-btn {
             width: 100%;
             height: 50px;
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            border: 2px solid #3e3e3e;
+            background: var(--bg-tertiary, #2a2a2a);
+            border: 2px solid var(--border-color, #3e3e3e);
             border-radius: 12px;
             display: flex;
             justify-content: center;
@@ -188,7 +243,7 @@
             content: '+';
             font-size: 32px;
             font-weight: 300;
-            color: #666;
+            color: var(--text-muted, #666);
             position: relative;
             z-index: 2;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -206,14 +261,14 @@
         }
 
         .sidebar-add-btn:hover {
-            background: linear-gradient(135deg, #3e3e3e 0%, #2a2a2a 100%);
-            border-color: #ff9d00;
+            background: var(--bg-accent, #3e3e3e);
+            border-color: var(--star-filled, #ffcc80);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(255, 157, 0, 0.25);
         }
 
         .sidebar-add-btn:hover::before {
-            color: #ff9d00;
+            color: var(--star-filled, #ffcc80);
             transform: rotate(90deg) scale(1.1);
             animation: pulse 1.5s ease-in-out infinite;
         }
@@ -276,7 +331,7 @@
         }
 
         .modal-content {
-            background: #1a1a1a;
+            background: var(--bg-primary, #1a1a1a);
             border: 1px solid #3e3e3e;
             padding: 30px;
             border-radius: 16px;
@@ -294,7 +349,7 @@
         .modal-title {
             font-size: 15px;
             font-weight: 400;
-            color: #9E9E9E;
+            color: var(--text-secondary, #9E9E9E);
             margin-bottom: 25px;
             line-height: 1.5;
             letter-spacing: 0.3px;
@@ -339,13 +394,14 @@
 
         .modal-buttons .cancel-btn {
             background: transparent;
-            color: #9E9E9E;
-            border: 2px solid #3e3e3e;
+            color: var(--text-secondary, #9E9E9E);
+            border: 2px solid var(--border-color, #3e3e3e);
         }
 
         .modal-buttons .cancel-btn:hover {
-            border-color: #555;
-            background: #2a2a2a;
+            border-color: var(--border-hover, #555);
+            background: var(--bg-tertiary, #2a2a2a);
+            color: var(--text-primary, #B8B8B8);
         }
 
         /* Минималистичное модальное окно */
@@ -372,11 +428,13 @@
         }
 
         .input-modal-content {
-            background: #1a1a1a;
+            background: var(--bg-primary, #1a1a1a);
             border: 1px solid #3e3e3e;
             padding: 30px;
             border-radius: 16px;
-            width: 350px;
+            width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             transform: scale(0.9);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -389,7 +447,7 @@
         .input-modal-title {
             font-size: 16px;
             font-weight: 400;
-            color: #9E9E9E;
+            color: var(--text-secondary, #9E9E9E);
             margin-bottom: 20px;
             text-align: center;
             letter-spacing: 0.5px;
@@ -399,9 +457,9 @@
             width: 100%;
             padding: 14px 16px;
             margin-bottom: 20px;
-            border: 2px solid #2a2a2a;
-            background: #0f0f0f;
-            color: #fff;
+            border: 2px solid var(--border-color, #2a2a2a);
+            background: var(--bg-primary, #0f0f0f);
+            color: var(--text-primary, #fff);
             border-radius: 10px;
             font-size: 15px;
             font-family: inherit;
@@ -410,12 +468,19 @@
         }
 
         .input-field:focus {
-            border-color: #ff9d00;
-            background: #141414;
+            border-color: var(--star-filled, #ffcc80);
+            background: var(--bg-primary, #141414);
         }
 
         .input-field::placeholder {
-            color: #555;
+            color: var(--text-muted, #555);
+        }
+
+        .input-field:disabled {
+            background: var(--bg-primary, #1a1a1a);
+            color: var(--text-muted, #666);
+            cursor: not-allowed;
+            border-color: var(--border-color, #2a2a2a);
         }
 
         .input-modal-buttons {
@@ -434,7 +499,7 @@
         }
 
         .input-modal-buttons .confirm-btn {
-            background: linear-gradient(135deg, #ff9d00 0%, #ff8800 100%);
+            background: linear-gradient(135deg, #ffcc80 0%, #ff8800 100%);
             color: #000;
             border: none;
         }
@@ -446,13 +511,116 @@
 
         .input-modal-buttons .cancel-btn {
             background: transparent;
-            color: #9E9E9E;
-            border: 2px solid #3e3e3e;
+            color: var(--text-secondary, #9E9E9E);
+            border: 2px solid var(--border-color, #3e3e3e);
         }
 
         .input-modal-buttons .cancel-btn:hover {
-            border-color: #555;
-            background: #2a2a2a;
+            border-color: var(--border-hover, #555);
+            background: var(--bg-tertiary, #2a2a2a);
+            color: var(--text-primary, #B8B8B8);
+        }
+
+        /* Кнопка назад */
+        .back-button-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 5;
+        }
+
+        .back-button {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-accent, #3e3e3e);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary, #9E9E9E);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--bg-hover, #323232);
+            color: var(--text-primary, #B8B8B8);
+        }
+
+        .back-button .material-symbols-outlined {
+            font-size: 24px;
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 600,
+                'GRAD' 0,
+                'opsz' 24;
+        }
+
+        /* Секция загрузки изображений */
+        .upload-section {
+            margin: 20px 0;
+        }
+
+        .upload-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary, #9E9E9E);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .upload-preview {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-tertiary, #2a2a2a);
+            border: 2px dashed var(--border-color, #3e3e3e);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .upload-preview.icon-preview {
+            height: 80px;
+        }
+
+        .upload-preview.has-image {
+            border-style: solid;
+            border-color: var(--star-filled, #ffcc80);
+        }
+
+        .upload-placeholder {
+            color: var(--text-muted, #555);
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .upload-preview.has-image .upload-placeholder {
+            display: none;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-tertiary, #2a2a2a);
+            border: 1px solid var(--border-color, #3e3e3e);
+            border-radius: 8px;
+            color: var(--text-secondary, #9E9E9E);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-btn:hover {
+            background: var(--bg-accent, #3e3e3e);
+            border-color: var(--border-hover, #555);
+            color: var(--text-primary, #B8B8B8);
         }
 
         @media (max-width: 768px) {
@@ -471,8 +639,15 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+    </div>
+    
     <div class="container">
         <div class="tile" id="tile1">
             <div class="tile-label">Категория 1</div>
@@ -518,6 +693,27 @@
         <div class="input-modal-content">
             <div class="input-modal-title">Новая категория</div>
             <input type="text" class="input-field" id="newCategoryInput" placeholder="Введите название" autocomplete="off">
+            
+            <!-- Загрузка фонового изображения -->
+            <div class="upload-section">
+                <label class="upload-label">Фоновое изображение:</label>
+                <div class="upload-preview" id="backgroundPreview">
+                    <span class="upload-placeholder">Выберите изображение</span>
+                </div>
+                <input type="file" id="backgroundInput" accept="image/*" style="display: none;">
+                <button class="upload-btn" id="backgroundBtn">Выбрать фон</button>
+            </div>
+
+            <!-- Загрузка иконки -->
+            <div class="upload-section">
+                <label class="upload-label">Иконка категории:</label>
+                <div class="upload-preview icon-preview" id="iconPreview">
+                    <span class="upload-placeholder">Выберите иконку</span>
+                </div>
+                <input type="file" id="iconInput" accept="image/*" style="display: none;">
+                <button class="upload-btn" id="iconBtn">Выбрать иконку</button>
+            </div>
+
             <div id="error-message" class="error-message" style="display: none;"></div>
             <div class="input-modal-buttons">
                 <button class="modal-btn cancel-btn" id="cancelAdd">Отмена</button>
@@ -545,10 +741,16 @@
                     
                     // Преобразуем в объекты с дополнительными данными
                     const usageCounts = this.getUsageCounts();
-                    return categories.map(name => ({
-                        name: name,
-                        usageCount: usageCounts[name] || 0
-                    })).sort((a, b) => b.usageCount - a.usageCount); // Сортируем по частоте использования
+                    return categories.map(cat => {
+                        // Поддержка старого формата (строки) и нового (объекты)
+                        const name = typeof cat === 'string' ? cat : cat.name;
+                        return {
+                            name: name,
+                            background: typeof cat === 'object' ? cat.background : null,
+                            icon: typeof cat === 'object' ? cat.icon : null,
+                            usageCount: usageCounts[name] || 0
+                        };
+                    }).sort((a, b) => b.usageCount - a.usageCount); // Сортируем по частоте использования
                 } catch (error) {
                     console.error('Ошибка загрузки категорий:', error);
                     return [];
@@ -574,14 +776,19 @@
             }
 
             // Добавить новую категорию
-            async add(categoryName) {
+            async add(categoryData) {
                 try {
+                    // categoryData может быть строкой (старый формат) или объектом (новый формат)
+                    const payload = typeof categoryData === 'string' 
+                        ? { name: categoryData }
+                        : categoryData;
+
                     const response = await fetch(this.apiUrl, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ name: categoryName })
+                        body: JSON.stringify(payload)
                     });
                     
                     const data = await response.json();
@@ -590,7 +797,7 @@
                         return { success: false, message: data.error || 'Ошибка при добавлении категории' };
                     }
                     
-                    return { success: true, category: { name: categoryName } };
+                    return { success: true, category: data.category };
                 } catch (error) {
                     console.error('Ошибка добавления категории:', error);
                     return { success: false, message: 'Ошибка соединения с сервером' };
@@ -621,6 +828,34 @@
                     return [];
                 }
             }
+
+            // Обновить категорию
+            async update(oldName, categoryData) {
+                try {
+                    const payload = typeof categoryData === 'string' 
+                        ? { name: categoryData }
+                        : categoryData;
+
+                    const response = await fetch(`${this.apiUrl}/${encodeURIComponent(oldName)}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        return { success: false, message: data.error || 'Ошибка при обновлении категории' };
+                    }
+                    
+                    return { success: true, category: data.category };
+                } catch (error) {
+                    console.error('Ошибка обновления категории:', error);
+                    return { success: false, message: 'Ошибка соединения с сервером' };
+                }
+            }
         }
 
         // Элементы DOM
@@ -637,6 +872,18 @@
         const newCategoryInput = document.getElementById('newCategoryInput');
         const errorMessage = document.getElementById('error-message');
 
+        // Элементы загрузки изображений
+        const backgroundInput = document.getElementById('backgroundInput');
+        const backgroundBtn = document.getElementById('backgroundBtn');
+        const backgroundPreview = document.getElementById('backgroundPreview');
+        const iconInput = document.getElementById('iconInput');
+        const iconBtn = document.getElementById('iconBtn');
+        const iconPreview = document.getElementById('iconPreview');
+
+        // Переменные для хранения выбранных изображений
+        let selectedBackground = null;
+        let selectedIcon = null;
+
         // Плитки
         const tiles = [
             document.getElementById('tile1'),
@@ -649,6 +896,8 @@
         // Инициализация хранилища
         const storage = new CategoryStorage();
         let currentCategoryToDelete = null;
+        let currentCategoryToEdit = null;
+        let isEditMode = false;
 
         // Функция отображения категорий
         async function renderCategories() {
@@ -666,11 +915,25 @@
             categories.forEach(category => {
                 const li = document.createElement('li');
                 li.setAttribute('data-name', category.name);
-                li.innerHTML = `${category.name} <button class="delete-btn">×</button>`;
+                li.innerHTML = `
+                    <span class="category-name">${category.name}</span>
+                    <div class="category-actions">
+                        <button class="edit-btn" title="Редактировать">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                        <button class="delete-btn" title="Удалить">×</button>
+                    </div>
+                `;
                 
-                // Добавляем обработчик клика на категорию (не на кнопку удаления)
+                // Добавляем обработчик клика на категорию (не на кнопки действий)
                 li.addEventListener('click', function(e) {
-                    if (!e.target.classList.contains('delete-btn')) {
+                    const target = e.target;
+                    const isActionButton = target.classList.contains('delete-btn') || 
+                                          target.classList.contains('edit-btn') ||
+                                          target.classList.contains('material-symbols-outlined') ||
+                                          target.closest('.category-actions');
+                    
+                    if (!isActionButton) {
                         selectCategoryAndNavigate(category.name);
                     }
                 });
@@ -699,6 +962,32 @@
                     // Добавляем класс для визуального различия
                     tile.classList.add('has-category');
                     
+                    // Устанавливаем фон, если есть
+                    if (category.background) {
+                        tile.style.backgroundImage = `url(${category.background})`;
+                        tile.style.backgroundSize = 'cover';
+                        tile.style.backgroundPosition = 'center';
+                        tile.style.backgroundRepeat = 'no-repeat';
+                        tile.style.border = 'none'; // Убираем border при наличии фона
+                    } else {
+                        tile.style.backgroundImage = '';
+                        tile.style.backgroundRepeat = '';
+                        tile.style.border = ''; // Возвращаем border если нет фона
+                    }
+                    
+                    // Добавляем иконку, если есть
+                    let iconElement = tile.querySelector('.tile-icon');
+                    if (category.icon) {
+                        if (!iconElement) {
+                            iconElement = document.createElement('div');
+                            iconElement.className = 'tile-icon';
+                            tile.insertBefore(iconElement, label);
+                        }
+                        iconElement.style.backgroundImage = `url(${category.icon})`;
+                    } else if (iconElement) {
+                        iconElement.remove();
+                    }
+                    
                     // Удаляем старые обработчики и добавляем новый
                     tile.onclick = function() {
                         selectCategoryAndNavigate(category.name);
@@ -707,6 +996,11 @@
                     // Нет категории для этой плитки
                     label.textContent = `Плитка ${i + 1}`;
                     tile.classList.remove('has-category');
+                    tile.style.backgroundImage = '';
+                    tile.style.backgroundRepeat = '';
+                    tile.style.border = '';
+                    const iconElement = tile.querySelector('.tile-icon');
+                    if (iconElement) iconElement.remove();
                     tile.onclick = null;
                 }
             }
@@ -719,37 +1013,120 @@
 
         // Обработчик клика по кнопке добавления категории в сайдбаре
         sidebarAddBtn.addEventListener('click', function() {
+            // Режим создания
+            isEditMode = false;
+            currentCategoryToEdit = null;
+            
+            // Сбрасываем форму
+            document.querySelector('.input-modal-title').textContent = 'Новая категория';
+            newCategoryInput.value = '';
+            newCategoryInput.disabled = false;
+            confirmAdd.textContent = 'Создать';
+            
+            // Сбрасываем загруженные изображения
+            selectedBackground = null;
+            selectedIcon = null;
+            backgroundPreview.style.backgroundImage = '';
+            backgroundPreview.classList.remove('has-image');
+            iconPreview.style.backgroundImage = '';
+            iconPreview.classList.remove('has-image');
+            
             inputModal.classList.add('active');
             newCategoryInput.focus();
             errorMessage.style.display = 'none';
         });
 
-        // Обработчик клика по кнопке отмены добавления
+        // Обработчики загрузки фона
+        backgroundBtn.addEventListener('click', function() {
+            backgroundInput.click();
+        });
+
+        backgroundInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    selectedBackground = event.target.result;
+                    backgroundPreview.style.backgroundImage = `url(${event.target.result})`;
+                    backgroundPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Обработчики загрузки иконки
+        iconBtn.addEventListener('click', function() {
+            iconInput.click();
+        });
+
+        iconInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    selectedIcon = event.target.result;
+                    iconPreview.style.backgroundImage = `url(${event.target.result})`;
+                    iconPreview.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Обработчик клика по кнопке отмены добавления/редактирования
         cancelAdd.addEventListener('click', function() {
             inputModal.classList.remove('active');
             newCategoryInput.value = '';
+            newCategoryInput.disabled = false;
             errorMessage.style.display = 'none';
+            isEditMode = false;
+            currentCategoryToEdit = null;
+            document.querySelector('.input-modal-title').textContent = 'Новая категория';
+            confirmAdd.textContent = 'Создать';
         });
 
-        // Обработчик клика по кнопке подтверждения добавления
+        // Обработчик клика по кнопке подтверждения добавления/редактирования
         confirmAdd.addEventListener('click', async function() {
             const categoryName = newCategoryInput.value.trim();
             if (categoryName) {
                 // Показываем процесс загрузки
                 confirmAdd.disabled = true;
-                confirmAdd.textContent = 'Добавление...';
+                const originalText = confirmAdd.textContent;
+                confirmAdd.textContent = isEditMode ? 'Сохранение...' : 'Добавление...';
                 
-                const result = await storage.add(categoryName);
+                const categoryData = {
+                    name: categoryName,
+                    background: selectedBackground,
+                    icon: selectedIcon
+                };
+                
+                let result;
+                if (isEditMode) {
+                    // Режим редактирования
+                    result = await storage.update(currentCategoryToEdit, categoryData);
+                } else {
+                    // Режим создания
+                    result = await storage.add(categoryData);
+                }
                 
                 // Возвращаем кнопку в исходное состояние
                 confirmAdd.disabled = false;
-                confirmAdd.textContent = 'Добавить';
+                confirmAdd.textContent = originalText;
                 
                 if (result.success) {
                     await renderCategories();
                     inputModal.classList.remove('active');
                     newCategoryInput.value = '';
+                    newCategoryInput.disabled = false;
                     errorMessage.style.display = 'none';
+                    isEditMode = false;
+                    currentCategoryToEdit = null;
+                    // Сбрасываем изображения
+                    selectedBackground = null;
+                    selectedIcon = null;
+                    backgroundPreview.style.backgroundImage = '';
+                    backgroundPreview.classList.remove('has-image');
+                    iconPreview.style.backgroundImage = '';
+                    iconPreview.classList.remove('has-image');
                 } else {
                     errorMessage.textContent = result.message;
                     errorMessage.style.display = 'block';
@@ -757,15 +1134,61 @@
             }
         });
 
-        // Обработчики для кнопок удаления категорий
+        // Обработчики для кнопок удаления и редактирования категорий
         document.addEventListener('click', function(e) {
+            // Проверяем клик по кнопке удаления
             if (e.target.classList.contains('delete-btn')) {
                 e.stopPropagation();
-                const categoryName = e.target.parentElement.getAttribute('data-name');
+                const categoryName = e.target.closest('li').getAttribute('data-name');
                 currentCategoryToDelete = categoryName;
                 confirmModal.classList.add('active');
             }
+            
+            // Проверяем клик по кнопке редактирования или её иконке
+            const editBtn = e.target.closest('.edit-btn');
+            if (editBtn) {
+                e.stopPropagation();
+                const categoryName = editBtn.closest('li').getAttribute('data-name');
+                openEditModal(categoryName);
+            }
         });
+
+        // Открыть модальное окно редактирования
+        async function openEditModal(categoryName) {
+            isEditMode = true;
+            currentCategoryToEdit = categoryName;
+            
+            // Загружаем данные категории
+            const categories = await storage.getAll();
+            const category = categories.find(cat => cat.name === categoryName);
+            
+            if (!category) return;
+            
+            // Заполняем форму
+            document.querySelector('.input-modal-title').textContent = 'Редактировать категорию';
+            newCategoryInput.value = category.name;
+            newCategoryInput.disabled = true; // Запрещаем изменение имени
+            
+            // Загружаем фон
+            if (category.background) {
+                selectedBackground = category.background;
+                backgroundPreview.style.backgroundImage = `url(${category.background})`;
+                backgroundPreview.classList.add('has-image');
+            }
+            
+            // Загружаем иконку
+            if (category.icon) {
+                selectedIcon = category.icon;
+                iconPreview.style.backgroundImage = `url(${category.icon})`;
+                iconPreview.classList.add('has-image');
+            }
+            
+            // Меняем текст кнопки
+            confirmAdd.textContent = 'Сохранить';
+            
+            inputModal.classList.add('active');
+            errorMessage.style.display = 'none';
+        }
 
         // Обработчик клика по кнопке отмены удаления
         cancelDelete.addEventListener('click', function() {
@@ -858,6 +1281,22 @@
             window.location.href = 'list_sorting.html';
         }
 
+        // Кнопка назад - возврат в index1.html без очистки фильтров
+        function goBack() {
+            // Сохраняем только contentType и watchStatus, убираем category
+            const pendingFiltersStr = localStorage.getItem('pendingFilters');
+            if (pendingFiltersStr) {
+                const pendingFilters = JSON.parse(pendingFiltersStr);
+                // Убираем категорию, но сохраняем тип контента и статус просмотра
+                if (pendingFilters.category) {
+                    delete pendingFilters.category;
+                    localStorage.setItem('pendingFilters', JSON.stringify(pendingFilters));
+                    console.log('🔙 [index2.html] Возврат назад, категория удалена из фильтров');
+                }
+            }
+            window.location.href = 'index1.html';
+        }
+
         // Проверка фильтров при загрузке страницы
         function checkPendingFiltersOnLoad() {
             const pendingFiltersStr = localStorage.getItem('pendingFilters');
@@ -880,6 +1319,7 @@
         checkPendingFiltersOnLoad();
         renderCategories();
     </script>
+    <script src="theme-manager.js"></script>
 </body>
 </html>
 

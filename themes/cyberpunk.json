@@ -1,0 +1,19 @@
+{
+  "name": "Cyber Punk",
+  "author": "Theme System",
+  "description": "Киберпанк стиль с неоновыми оттенками",
+  "backgroundColor": "#0f0f23",
+  "primaryColor": "#1a1a40",
+  "secondaryColor": "#2a2a5a",
+  "accentColor": "#3f3f7a",
+  "hoverColor": "#4f4f8a",
+  "activeColor": "#5f5f9a",
+  "textPrimary": "#00ffff",
+  "textSecondary": "#00cccc",
+  "textTertiary": "#009999",
+  "textMuted": "#006666",
+  "textHover": "#66ffff",
+  "borderColor": "#00ffff",
+  "borderHover": "#66ffff"
+}
+
