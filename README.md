@@ -2,7 +2,7 @@
 
 
 
-<img src="title_logo.png" width="2000"/>
+<img src="title_assets/images/assets/images/logo.png" width="2000"/>
 
   
 # Менеджер коллекции фильмов и сериалов
@@ -28,7 +28,7 @@
 
 <div align="center">
 
-![Demo](demo.gif)
+![Demo](assets/images/assets/images/demo.gif)
 
 *Основной функционал приложения*
 
@@ -200,7 +200,7 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 **Crypto donations:**
 
-<img src="crypto_qr.jpg" alt="Crypto QR" width="200"/>
+<img src="assets/images/assets/images/crypto_qr.jpg" alt="Crypto QR" width="200"/>
 
 ```
 BTC: 
