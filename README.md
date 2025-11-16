@@ -100,35 +100,6 @@ npm start
 
 ---
 
-  
-
-## Структура
-
-  
-
-```
-
-├── index1.html              # Главная страница
-
-├── index2.html              # Категории
-
-├── list_sorting.html        # Список фильмов
-
-├── edit-film.html           # Редактор
-
-├── theme-manager.js         # Система тем
-
-├── server.js                # API сервер
-
-└── package.json             # Зависимости
-
-```
-
-  
-
----
-
-  
 
 ## Технологии
 
@@ -175,11 +146,6 @@ Node.js • Express • Vanilla JavaScript • CSS Variables
 
 <div align="center">
 
-  
-
-## Star History
-
-  
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FLEXIY0/KinoTeka-watchlist&type=Date)](https://star-history.com/#FLEXIY0/KinoTeka-watchlist&Date)
 
