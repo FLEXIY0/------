@@ -1,7 +1,7 @@
 
 
 <img src="\assets\images\title_logo.png" width="2000"/>
-
+<div align="center">
   
 # Менеджер коллекции фильмов и сериалов
 
@@ -9,12 +9,10 @@
 [English](\docs\README_EN.md) | **Русский**
 
 
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/droopi_co)
-
-[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](docs\LICENSE)
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/droopi_co) [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](docs\LICENSE)
 
 
-
+</div>
 ## Демонстрация
 
 <div align="center">
