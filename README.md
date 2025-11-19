@@ -8,9 +8,10 @@
 <img src="\assets\images\title_logo.png" width="1000"/>
 
 <div align="center">
+
 [English](\docs\README_EN.md) | **Русский**
 
-</div>
+
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/droopi_co) [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge)](docs\LICENSE)
 </div>
 
