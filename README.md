@@ -1,12 +1,11 @@
 
 
-<div align="center">
-  
-# Менеджер коллекции фильмов
 
-</div>
+  
+# Менеджер коллекции фильмов и сериалов
+
+
 <img src="\assets\images\title_logo.png" width="1000"/>
- и сериалов
 
 <div align="center">
 [English](\docs\README_EN.md) | **Русский**
