@@ -487,6 +487,11 @@ app.delete('/api/categories/:name', async (req, res) => {
     }
 });
 
+// Маршрут для главной страницы
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Запуск сервера
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
