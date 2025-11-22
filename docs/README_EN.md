@@ -2,7 +2,7 @@
 
 **English** | [Русский](README.md)
 
-<img src="title_logo.png" width="2000"/>
+<img src="/assets/images/title_logo.png" width="2000"/>
 
   
 # Film and Series Collection Manager
@@ -27,7 +27,7 @@
 
 <div align="center">
 
-![Demo](demo.gif)
+![Demo](/assets/images/demo.gif)
 
 *Main application features*
 
@@ -67,9 +67,9 @@ Web application for managing film collection with rating system, categories and 
 
 # Clone repository
 
-git clone https://github.com/FLEXIY0/------.git
+git clone https://github.com/FLEXIY0/KinoTeka-watchlist.git
 
-cd ------
+cd KinoTeka-watchlist
 
   
 
@@ -87,7 +87,7 @@ npm start
 
   
 
-**Windows:** run `start_app.bat`  
+**Windows:** run `start_app.bat or start.bat`  
 
 **Linux/macOS:** run `./start.sh`
 
